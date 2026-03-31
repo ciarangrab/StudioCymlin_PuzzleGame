@@ -1,4 +1,6 @@
 import pygame
+
+from src.settings import COW_SPRITESHEET_ABS_PATH
 from src.sprites.game_sprite import GameSprite
 
 class Duck(GameSprite):
@@ -12,7 +14,7 @@ class Duck(GameSprite):
 
         # Set sprite sheet image
         try:
-            self.sprite_sheet = pygame.image.load("assets/images/sprites/cow_spritesheet.png")  # FIXME: Get correct duck sprite sheet addr
+            self.sprite_sheet = pygame.image.load(COW_SPRITESHEET_ABS_PATH)  # FIXME: Get correct duck sprite sheet addr
         except FileNotFoundError:
             print("Error: Could not find 'assets/images/sprites/cow_spritesheet.png'")
             return

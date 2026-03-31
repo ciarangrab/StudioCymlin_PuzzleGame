@@ -1,7 +1,7 @@
 import pygame
 import sys
 
-from src.sprites.game_sprite import GameSprite
+from src.settings import LEVEL_1_ABS_PATH
 from src.sprites.cow import Cow
 from src.sprites.duck import Duck
 
@@ -11,7 +11,7 @@ def main():
     pygame.init()
 
     # 2. Set up the display
-    screen_width = 640
+    screen_width = 1280
     screen_height = 900
     screen = pygame.display.set_mode((screen_width, screen_height))
     pygame.display.set_caption("Sprite Class Test")
@@ -19,7 +19,7 @@ def main():
     # --- NEW: Load Background Image ---
     try:
         # .convert() optimizes the image format for Pygame, making drawing much faster
-        background_image = pygame.image.load("assets/images/levels/Level_1.png").convert()
+        background_image = pygame.image.load(LEVEL_1_ABS_PATH).convert()
 
         # Scale the background to ensure it perfectly fits your window dimensions
         background_image = pygame.transform.scale(background_image, (screen_width, screen_height))
@@ -30,8 +30,8 @@ def main():
 
     # 3. Set up a Clock to control the frame rate
     clock = pygame.time.Clock()
-    fps = 60
-
+    fps = 6
+    
     # 4. Create the Sprite Group and instantiate the Cow and Duck
     all_sprites = pygame.sprite.Group()
 

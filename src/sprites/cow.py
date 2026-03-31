@@ -1,4 +1,6 @@
 import pygame
+
+from src.settings import COW_SPRITESHEET_ABS_PATH
 from src.sprites.game_sprite import GameSprite
 
 class Cow(GameSprite):
@@ -13,7 +15,7 @@ class Cow(GameSprite):
 
         # Set sprite sheet image
         try:
-            self.sprite_sheet = pygame.image.load("assets/images/sprites/cow_spritesheet.png")
+            self.sprite_sheet = pygame.image.load(COW_SPRITESHEET_ABS_PATH)
         except FileNotFoundError:
             print("Error: Could not find 'assets/images/sprites/cow_spritesheet.png'")
             return
