@@ -1,5 +1,7 @@
 import pygame
 import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.settings import LEVEL_1_ABS_PATH
 from src.sprites.cow import Cow
@@ -7,72 +9,76 @@ from src.sprites.duck import Duck
 
 
 def main():
-    # 1. Initialize Pygame
     pygame.init()
 
-    # 2. Set up the display
     screen_width = 1280
-    screen_height = 900
+    screen_height = 720
     screen = pygame.display.set_mode((screen_width, screen_height))
-    pygame.display.set_caption("Sprite Class Test")
+    pygame.display.set_caption("Sprite Movement & Animation Test")
 
-    # --- NEW: Load Background Image ---
+    # Load background
     try:
-        # .convert() optimizes the image format for Pygame, making drawing much faster
         background_image = pygame.image.load(LEVEL_1_ABS_PATH).convert()
-
-        # Scale the background to ensure it perfectly fits your window dimensions
         background_image = pygame.transform.scale(background_image, (screen_width, screen_height))
     except FileNotFoundError:
-        print("Error: Could not find 'assets/images/sprites/cow_spritesheet.png'")
-        pygame.quit()
-        sys.exit()
+        print("Error: Could not find Level_1.png, using blank background.")
+        background_image = None
 
-    # 3. Set up a Clock to control the frame rate
     clock = pygame.time.Clock()
-    fps = 6
-    
-    # 4. Create the Sprite Group and instantiate the Cow and Duck
+    fps = 60
+    font = pygame.font.SysFont(None, 28)
+
     all_sprites = pygame.sprite.Group()
 
-    # Spawning the cow and duck in the middle of the screen
-    my_cow = Cow(x=screen_width // 2, y=screen_height // 2, scale=2.5)
-    my_duck = Duck(x=screen_width // 2, y=screen_height // 2, scale=2.5)
+    # Spawn cow and duck at different positions so they don't overlap
+    my_cow = Cow(x=screen_width // 3, y=screen_height // 2, scale=2.5)
+    my_duck = Duck(x=(screen_width // 3) * 2, y=screen_height // 2, scale=2.5)
 
-    # Add the cow and duck to the group
     all_sprites.add(my_cow)
     all_sprites.add(my_duck)
 
-    # 5. The Main Game Loop
     running = True
     while running:
+        dt = clock.tick(fps) / 1000.0
+
         # --- Event Handling ---
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
 
-        # --- Game Logic / Updating ---
-        # This calls the update() method on every sprite in the group automatically
-        all_sprites.update()
+        # --- Update ---
+        all_sprites.update(dt)
 
-        # --- Rendering / Drawing ---
-        # NEW: Draw the background image starting at the top-left corner (0, 0)
-        screen.blit(background_image, (0, 0))
+        # --- Draw ---
+        if background_image:
+            screen.blit(background_image, (0, 0))
+        else:
+            screen.fill((30, 30, 30))
 
-        # Draw all sprites in the group over top of the background
         all_sprites.draw(screen)
 
-        # Update the full display Surface to the screen
+        # --- HUD: debug info for each sprite ---
+        debug_lines = [
+            "Controls: Arrow Keys = Cow | WASD = Duck | ESC = Quit",
+            f"FPS: {clock.get_fps():.1f}",
+            f"Cow    | pos: ({my_cow.rect.x}, {my_cow.rect.y})  dir: {my_cow.direction}  moving: {my_cow.is_moving}  frame: {int(my_cow.frame_index)}",
+            f"Duck   | pos: ({my_duck.rect.x}, {my_duck.rect.y})  dir: {my_duck.direction}  moving: {my_duck.is_moving}  frame: {int(my_duck.frame_index)}",
+        ]
+
+        for i, line in enumerate(debug_lines):
+            text_surface = font.render(line, True, (255, 255, 255))
+            # Draw a dark shadow behind text so it's readable over any background
+            shadow_surface = font.render(line, True, (0, 0, 0))
+            screen.blit(shadow_surface, (11, 11 + i * 26))
+            screen.blit(text_surface, (10, 10 + i * 26))
+
         pygame.display.flip()
 
-        # --- Frame Rate Control ---
-        # Ensure the game runs at a consistent 60 frames per second
-        clock.tick(fps)
-
-    # Clean up and quit when the loop breaks
     pygame.quit()
     sys.exit()
-
 
 if __name__ == "__main__":
     main()

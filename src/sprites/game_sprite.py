@@ -43,13 +43,13 @@ class GameSprite(pygame.sprite.Sprite):
 
         return image
 
-    def update(self):
+    def update(self, dt=1):
         """ Handles animation """
 
         if self.is_moving:
 
             # Increase the frame index by the animation speed
-            self.frame_index += self.animation_speed
+            self.frame_index += self.animation_speed * 60 *dt
 
             # Each row has four frames, so loop back around after fourth frame
             if self.frame_index >= 4:
