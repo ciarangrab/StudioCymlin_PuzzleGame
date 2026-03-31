@@ -1,0 +1,21 @@
+# Python caches and compiled files
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual Environments and Secrets
+venv/
+env/
+.env
+
+# Temporary and Log files
+*.save
+*.log
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Editor configurations
+.vscode/
+.idea/
