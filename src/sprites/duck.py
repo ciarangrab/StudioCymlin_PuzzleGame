@@ -43,7 +43,7 @@ class Duck(GameSprite):
     def update(self, dt=1):
         """ Handles Player info for animation """
 
-        PIXELS_PER_SECOND = 120
+        PIXELS_PER_SECOND = 225
 
         # Get the keys that are currently being pressed
         keys = pygame.key.get_pressed()
@@ -51,7 +51,8 @@ class Duck(GameSprite):
         # Reset movement for movement check
         self.is_moving = False
 
-        # Determine Movement Direction
+        # Determine Movement Direction 
+        # [ Duck movement controlled by WASD ]
         if keys[pygame.K_a]:
             self.rect.x -= int(PIXELS_PER_SECOND * dt)
             self.direction = "left"

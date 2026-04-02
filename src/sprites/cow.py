@@ -45,7 +45,7 @@ class Cow(GameSprite):
     def update(self, dt=1):
         """ Handles Player info for animation """
 
-        PIXELS_PER_SECOND = 120
+        PIXELS_PER_SECOND = 200
 
         # Get the keys that are currently being pressed
         keys = pygame.key.get_pressed()
@@ -54,7 +54,7 @@ class Cow(GameSprite):
         self.is_moving = False
 
         # Determine Movement Direction
-
+        # [ Cow movement controlled by arrow keys ]
         if keys[pygame.K_LEFT]:
             self.rect.x -= int(PIXELS_PER_SECOND * dt)
             self.direction = "left"

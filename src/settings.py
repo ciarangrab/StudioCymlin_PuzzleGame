@@ -12,6 +12,7 @@ PROJECT_ROOT = SETTINGS_ROOT.parent.parent
 ASSETS_DIR = PROJECT_ROOT / "assets"
 IMAGES_DIR = ASSETS_DIR / "images"
 SPRITES_DIR = IMAGES_DIR / "sprites"
+OBJECTS_DIR = SPRITES_DIR / "objects"
 LEVELS_DIR = IMAGES_DIR / "levels"
 
 # Absolute Paths for core files
