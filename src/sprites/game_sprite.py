@@ -12,6 +12,10 @@ class GameSprite(pygame.sprite.Sprite):
         self.walk_down_frames = []
         self.walk_up_frames = []
 
+        # Holds temp position during movement
+        self.x = 0
+        self.y = 0
+
         # Animation Variables
         self.frame_index = 0.0
         self.animation_speed = 0.15
@@ -71,6 +75,12 @@ class GameSprite(pygame.sprite.Sprite):
 
             # Update self.image with the new image
             self.image = frame_list[int(self.frame_index)]
+
+            # Update the self.rect to match the new image
+            self.rect = self.image.get_rect()
+
+            # Update the new rect with the updated position
+            self.rect.topleft = (self.x, self.y)
 
         else:
             # If not moving, set the animation to a frame that's standing still

@@ -71,5 +71,9 @@ class Cow(GameSprite):
             self.rect.y += int(PIXELS_PER_SECOND * dt)
             self.direction = "down"
             self.is_moving = True
+        
+        self.x = self.rect.x
+        self.y = self.rect.y
+    
 
         super().update(dt)
