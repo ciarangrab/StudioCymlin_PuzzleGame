@@ -1,4 +1,5 @@
 import pygame
+from src.settings import LEVEL_1_COLL_MASK
 
 class GameSprite(pygame.sprite.Sprite):
 
@@ -98,3 +99,5 @@ class GameSprite(pygame.sprite.Sprite):
 
                 case "down":
                     self.image = self.walk_down_frames[0]
+    
+   

@@ -60,7 +60,7 @@ class DuckKey(pygame.sprite.Sprite):
 
         if self.collected and duck is not None:
             self.rect.centerx = duck.rect.centerx + self.follow_offset_x
-            self.rect.centery = duck.rect.centery + self.follow_offset_yg
+            self.rect.centery = duck.rect.centery + self.follow_offset_y
 
 
 def main():
@@ -86,16 +86,16 @@ def main():
     all_sprites = pygame.sprite.Group()
 
     # Spawn cow and duck at different positions so they don't overlap
-    my_cow = Cow(x=screen_width // 3, y=screen_height // 2, scale=2.5)
-    my_duck = Duck(x=(screen_width // 3) * 2, y=screen_height // 2, scale=2.5)
     my_crate = Crate(x=screen_width // 2, y=screen_height // 2 + 100, scale=2)
-
+    my_cow = Cow(x=21, y=375, scale=2.5)
+    my_duck = Duck(x=1015, y=480, scale=2.5)
+    
+    all_sprites.add(my_crate)
     all_sprites.add(my_cow)
     all_sprites.add(my_duck)
-    all_sprites.add(my_crate)
 
     # Spawn the duck's key
-    duck_key = DuckKey(x=screen_width // 2, y=screen_height // 3)
+    duck_key = DuckKey(x=890, y=330)
     all_sprites.add(duck_key)
 
     # Track whether the duck currently has the key

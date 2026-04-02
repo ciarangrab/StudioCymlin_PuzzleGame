@@ -73,4 +73,7 @@ class Duck(GameSprite):
             self.direction = "down"
             self.is_moving = True
 
+        self.x = self.rect.x
+        self.y = self.rect.y
+
         super().update(dt)
