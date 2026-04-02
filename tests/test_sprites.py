@@ -6,6 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from src.settings import LEVEL_1_ABS_PATH
 from src.sprites.cow import Cow
 from src.sprites.duck import Duck
+from src.sprites.crate import Crate
 
 class DuckKey(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -87,9 +88,11 @@ def main():
     # Spawn cow and duck at different positions so they don't overlap
     my_cow = Cow(x=screen_width // 3, y=screen_height // 2, scale=2.5)
     my_duck = Duck(x=(screen_width // 3) * 2, y=screen_height // 2, scale=2.5)
+    my_crate = Crate(x=screen_width // 2, y=screen_height // 2 + 100, scale=2)
 
     all_sprites.add(my_cow)
     all_sprites.add(my_duck)
+    all_sprites.add(my_crate)
 
     # Spawn the duck's key
     duck_key = DuckKey(x=screen_width // 2, y=screen_height // 3)
@@ -120,6 +123,18 @@ def main():
         if duck_key.alive():
             duck_key.update(dt, my_duck)
         
+        # Cow pushes crate
+        if my_cow.rect.colliderect(my_crate.rect) and my_cow.is_moving:
+            push_speed = 200  # pixels per second
+            if my_cow.direction == "left":
+                my_crate.rect.x -= int(push_speed * dt)
+            elif my_cow.direction == "right":
+                my_crate.rect.x += int(push_speed * dt)
+            elif my_cow.direction == "up":
+                my_crate.rect.y -= int(push_speed * dt)
+            elif my_cow.direction == "down":
+                my_crate.rect.y += int(push_speed * dt)
+        
         #duck collects key by touching it
         if duck_key.alive() and not duck_key.collected and my_duck.rect.colliderect(duck_key.rect):
             duck_key.collected = True
@@ -132,6 +147,10 @@ def main():
             screen.fill((30, 30, 30))
 
         all_sprites.draw(screen)
+
+        # --- Debug: Draw hitbox rects in white ---
+        pygame.draw.rect(screen, (255, 255, 255), my_cow.rect, 2)
+        pygame.draw.rect(screen, (255, 255, 255), my_crate.rect, 2)
 
         # --- HUD: debug info for each sprite ---
         debug_lines = [

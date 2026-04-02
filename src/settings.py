@@ -17,4 +17,5 @@ LEVELS_DIR = IMAGES_DIR / "levels"
 
 # Absolute Paths for core files
 COW_SPRITESHEET_ABS_PATH = str(SPRITES_DIR / "cow_spritesheet.png")
+CRATE_SPRITESHEET_ABS_PATH = str(OBJECTS_DIR / "crate_spritesheet.png")
 LEVEL_1_ABS_PATH = str(LEVELS_DIR / "Level_1.png")
