@@ -87,8 +87,8 @@ def main():
 
     # Spawn cow and duck at different positions so they don't overlap
     my_crate = Crate(x=screen_width // 2, y=screen_height // 2 + 100, scale=2)
-    my_cow = Cow(x=21, y=375, scale=2.5)
-    my_duck = Duck(x=1015, y=480, scale=2.5)
+    my_cow = Cow(x=21, y=375, scale=2)
+    my_duck = Duck(x=1015, y=500, scale=2)
     
     all_sprites.add(my_crate)
     all_sprites.add(my_cow)

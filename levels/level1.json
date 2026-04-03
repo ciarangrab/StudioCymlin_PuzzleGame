@@ -1,0 +1,17 @@
+{
+  "name": "Level 1",
+  "background_image": "Level_1.png",
+  "collision_mask": "Level_1_Collision_Mask.png",
+  "cow_start": [21, 375],
+  "duck_start": [1015, 500],
+  "key_start": [890, 330],
+  "buttons_start": [
+    [],
+    []
+  ],
+  "crates_start": [
+    [],
+    [],
+    []
+  ]
+}
