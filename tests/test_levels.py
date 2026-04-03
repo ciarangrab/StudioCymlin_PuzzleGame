@@ -2,15 +2,14 @@ import pygame
 import sys
 import os
 
-from src.settings import LEVEL_1_JSON_PATH
-
 # Ensure the src directory is in the path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.game_level import GameLevel
 from src.sprites.cow import Cow
 from src.sprites.duck import Duck
 from src.sprites.crate import Crate
+from src.settings import LEVEL_1_JSON_PATH
 
 
 # from src.sprites.duck_key import DuckKey # Make sure to import this if needed for type checking!
