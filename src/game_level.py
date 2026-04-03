@@ -27,19 +27,21 @@ class GameLevel:
         self.cow_start_pos = level_data.get("cow_start", [0,0])
         self.duck_start_pos = level_data.get("duck_start", [0,0])
         self.key_start_pos = level_data.get("key_start", [0,0])
-        self.buttons_start_pos = level_data.get("buttons_start", [[], []])
-        self.crates_start_pos = level_data.get("crates_start", [[], []])
+        self.buttons_start_pos = level_data.get("buttons_start", [[0,0], [0,0]])
+        self.crates_start_pos = level_data.get("crates_start", [[0,0], [0,0]])
 
         # Load the level background
         self.background_image = pygame.image.load(str(bg_path)).convert()
+        self.background_image = pygame.transform.scale(self.background_image, (1280, 720))
         self.rect = self.background_image.get_rect(topleft=(0,0))
 
         # Load the collision mask image
         mask_surface = pygame.image.load(str(mask_path)).convert()
-        mask_surface.set_colorkey((0, 0, 0))
+        mask_surface = pygame.transform.scale(mask_surface, (1280, 720))
+
 
         # Set collision mask
-        self.mask = pygame.mask.from_surface(mask_surface)
+        self.mask = pygame.mask.from_threshold(mask_surface, pygame.Color('white'), (10, 10, 10, 255))
 
 
         # ---- Load Sprites ----
@@ -70,7 +72,7 @@ class GameLevel:
 
     def update(self, dt=1):
         """ Updates all sprites in the level """
-        self.all_sprites.update(dt)
+        self.all_sprites.update(dt, self)
 
     def draw(self, surface):
         """ Draws images to the screen """
@@ -80,3 +82,32 @@ class GameLevel:
 
         # Draw the sprites
         self.all_sprites.draw(surface)
+
+    def check_wall_collision(self, sprite):
+        """ Returns True if the sprite overlaps a wall --> white pixels on the collision mask """
+
+        # Compare sprite mask against level mask
+        if not hasattr(sprite, 'mask'):
+            sprite.mask = pygame.mask.from_surface(sprite.image)
+
+        # Calculate offset
+        offset_x = sprite.rect.x - self.rect.x
+        offset_y = sprite.rect.y - self.rect.y
+
+        # Check for overlap --> anything other than None means a collision with the wall
+        return self.mask.overlap(sprite.mask, (offset_x, offset_y)) is not None
+
+    def draw_debug_masks(self, surface):
+        """ Renders the invisible collision data to the screen. Walls = Red, Sprites = Blue """
+
+        # 1. Paint the level's wall mask RED
+        if hasattr(self, 'mask'):
+            # setcolor is the solid part, unsetcolor is the transparent part
+            wall_surface = self.mask.to_surface(setcolor=(255, 0, 0, 150), unsetcolor=(0, 0, 0, 0))
+            surface.blit(wall_surface, self.rect)
+
+        # 2. Paint the sprites' masks BLUE
+        for sprite in self.all_sprites:
+            if hasattr(sprite, 'mask'):
+                sprite_surface = sprite.mask.to_surface(setcolor=(0, 0, 255, 150), unsetcolor=(0, 0, 0, 0))
+                surface.blit(sprite_surface, sprite.rect)

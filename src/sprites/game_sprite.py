@@ -48,7 +48,7 @@ class GameSprite(pygame.sprite.Sprite):
 
         return image
 
-    def update(self, dt=1):
+    def update(self, dt=1, level=None):
         """ Handles animation """
 
         if self.is_moving:
@@ -99,5 +99,5 @@ class GameSprite(pygame.sprite.Sprite):
 
                 case "down":
                     self.image = self.walk_down_frames[0]
-    
-   
+
+        self.mask = pygame.mask.from_surface(self.image)

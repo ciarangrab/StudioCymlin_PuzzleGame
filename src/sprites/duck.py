@@ -40,7 +40,7 @@ class Duck(GameSprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
 
-    def update(self, dt=1):
+    def update(self, dt=1, level=None):
         """ Handles Player info for animation """
 
         PIXELS_PER_SECOND = 225

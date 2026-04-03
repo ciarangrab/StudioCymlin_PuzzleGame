@@ -3,6 +3,7 @@ import pygame
 from src.settings import COW_SPRITESHEET_ABS_PATH
 from src.sprites.game_sprite import GameSprite
 
+
 class Cow(GameSprite):
     def __init__(self, x, y, scale):
 
@@ -42,7 +43,7 @@ class Cow(GameSprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
 
-    def update(self, dt=1):
+    def update(self, dt=1, level=None):
         """ Handles Player info for animation """
 
         PIXELS_PER_SECOND = 200
@@ -53,8 +54,13 @@ class Cow(GameSprite):
         # Reset movement for movement check
         self.is_moving = False
 
-        # Determine Movement Direction
+        # ---- Movement and Collision ----
         # [ Cow movement controlled by arrow keys ]
+
+        # Save x starting position
+        self.x = self.rect.x
+
+        # x-axis movement
         if keys[pygame.K_LEFT]:
             self.rect.x -= int(PIXELS_PER_SECOND * dt)
             self.direction = "left"
@@ -63,7 +69,16 @@ class Cow(GameSprite):
             self.rect.x += int(PIXELS_PER_SECOND * dt)
             self.direction = "right"
             self.is_moving = True
-        elif keys[pygame.K_UP]:
+
+        # Check for x-axis collisions
+        if level and level.check_wall_collision(self):
+            self.rect.x = self.x    # Restores previous position
+
+        # Save y starting position
+        self.y = self.rect.y
+
+        # y-axis movement
+        if keys[pygame.K_UP]:
             self.rect.y -= int(PIXELS_PER_SECOND * dt)
             self.direction = "up"
             self.is_moving = True
@@ -71,9 +86,12 @@ class Cow(GameSprite):
             self.rect.y += int(PIXELS_PER_SECOND * dt)
             self.direction = "down"
             self.is_moving = True
-        
+
+        # Check for y-axis collisions
+        if level and level.check_wall_collision(self):
+            self.rect.y = self.y    #Restores previous position
+
         self.x = self.rect.x
         self.y = self.rect.y
-    
 
-        super().update(dt)
+        super().update(dt, level)
