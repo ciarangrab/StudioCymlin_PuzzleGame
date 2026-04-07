@@ -3,6 +3,8 @@ from src.settings import LEVEL_1_COLL_MASK
 
 class GameSprite(pygame.sprite.Sprite):
 
+    type_of_sprite = {0: "cow", 1: "duck", 2: "object"}
+
     def __init__(self, scale: int):
 
         super().__init__()
@@ -11,7 +13,9 @@ class GameSprite(pygame.sprite.Sprite):
         self.walk_right_frames = []
         self.walk_left_frames = []
         self.walk_down_frames = []
-        self.walk_up_frames = []
+        self.walk_up_frames = [] 
+        self.spriteID = -1
+        self.standing_img = None
 
         # Holds temp position during movement
         self.x = 0
@@ -85,19 +89,27 @@ class GameSprite(pygame.sprite.Sprite):
 
         else:
             # If not moving, set the animation to a frame that's standing still
-            self.frame_index = 0
 
-            match self.direction:
-                case "left":
-                    self.image = self.walk_left_frames[0]
+            match (self.spriteID):
+                # For the cow, the still frame to stop on should be based on movement direction
+                case 0:
+                    self.frame_index = 0
 
-                case "right":
-                    self.image = self.walk_right_frames[0]
+                    match self.direction:
+                        case "left":
+                            self.image = self.walk_left_frames[0]
 
-                case "up":
-                    self.image = self.walk_up_frames[0]
+                        case "right":
+                            self.image = self.walk_right_frames[0]
 
-                case "down":
-                    self.image = self.walk_down_frames[0]
+                        case "up":
+                            self.image = self.walk_up_frames[0]
+
+                        case "down":
+                            self.image = self.walk_down_frames[0]
+
+                # For the duck, the duck should stop flying and stand still, which is the same image regardless of direction
+                case 1:
+                    self.image = self.standing_img
 
         self.mask = pygame.mask.from_surface(self.image)

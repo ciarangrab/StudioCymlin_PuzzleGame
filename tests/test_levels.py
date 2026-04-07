@@ -9,7 +9,7 @@ from src.game_level import GameLevel
 from src.sprites.cow import Cow
 from src.sprites.duck import Duck
 from src.sprites.crate import Crate
-from src.settings import LEVEL_1_JSON_PATH
+from src.settings import LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH
 
 
 # from src.sprites.duck_key import DuckKey # Make sure to import this if needed for type checking!
@@ -28,7 +28,7 @@ def main():
     font = pygame.font.SysFont(None, 28)
 
     # --- Load the Level ---
-    json_path = LEVEL_1_JSON_PATH
+    json_path = LEVEL_2_JSON_PATH
     try:
         current_level = GameLevel(json_path)
     except Exception as e:
@@ -81,9 +81,6 @@ def main():
         # 1. Update all sprites in the level
         current_level.update(dt)
 
-        # NOTE: Your original test script passed my_duck into the key's update: `duck_key.update(dt, my_duck)`
-        # Since the group update only passes `dt`, you might need to manually call the key's update here
-        # if it explicitly requires the duck object to function properly:
         if duck_key and duck_key.alive():
             try:
                 duck_key.update(dt, my_duck)

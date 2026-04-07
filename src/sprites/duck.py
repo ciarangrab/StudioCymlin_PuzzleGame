@@ -1,9 +1,10 @@
 import pygame
 
-from src.settings import COW_SPRITESHEET_ABS_PATH
+from src.settings import DUCK_SPRITESHEET_ABS_PATH, COW_SPRITESHEET_ABS_PATH
 from src.sprites.game_sprite import GameSprite
 
 class Duck(GameSprite):
+    
     def __init__(self, x, y, scale):
         """
         Goes through the frames of the duck sprite sheet given its dimensions and saves
@@ -12,29 +13,34 @@ class Duck(GameSprite):
 
         super().__init__(scale)
 
+        self.spriteID = 1
+
         # Set sprite sheet image
         try:
-            self.sprite_sheet = pygame.image.load(COW_SPRITESHEET_ABS_PATH)  # FIXME: Get correct duck sprite sheet addr
+            self.sprite_sheet = pygame.image.load(DUCK_SPRITESHEET_ABS_PATH)
         except FileNotFoundError:
-            print("Error: Could not find 'assets/images/sprites/cow_spritesheet.png'")
+            print("Error: Could not find 'assets/images/sprites/duck_spritesheet.png'")
             return
+
+        self.standing_img = self.get_image(x=0, y=0, width=16, height=20, scale=scale)
+
 
         for i in range(4):      #FIXME: Update the x and y values for sprite sheet dimensions
             # Row 1 (Right): X moves by [   ] pixels each loop
-            self.walk_right_frames.append(self.get_image(x=i * 37, y=0, width=37, height=30, scale=scale))
+            self.walk_right_frames.append(self.get_image(x=i * 16, y=21, width=16, height=20, scale=scale, flip_x=True))
 
             # Row 1 (Left): Same as above, but flipped
             self.walk_left_frames.append(
-                self.get_image(x=i * 37, y=0, width=37, height=30, scale=scale, flip_x=True))
+                self.get_image(x=i * 16, y=21, width=16, height=20, scale=scale))
 
             # Row 2 (Down): X moves by [   ] pixels each loop
-            self.walk_down_frames.append(self.get_image(x=i * 25, y=30, width=25, height=36, scale=scale))
+            self.walk_down_frames.append(self.get_image(x=i * 18, y=40, width=18, height=19, scale=scale))
 
             # Row 3 (Up): X moves by [   ] pixels each loop
-            self.walk_up_frames.append(self.get_image(x=i * 25, y=66, width=25, height=34, scale=scale))
+            self.walk_up_frames.append(self.get_image(x=i * 18, y=59, width=18, height=19, scale=scale))
 
-        # Set a starting image for the sprite [Default to walking right]
-        self.image = self.walk_right_frames[0]
+        # Set a starting image for the sprite [Default to standing not flying]
+        self.image = self.standing_img
 
         # Set rect
         self.rect = self.image.get_rect()

@@ -22,6 +22,7 @@ JSON_LEVELS_DIR = PROJECT_ROOT / "levels"
 
 # Sprites 
 COW_SPRITESHEET_ABS_PATH = str(SPRITES_DIR / "cow_spritesheet.png")
+DUCK_SPRITESHEET_ABS_PATH = str(SPRITES_DIR / "duck_spritesheet.png")
 
 # Objects
 CRATE_SPRITESHEET_ABS_PATH = str(OBJECTS_DIR / "crate_spritesheet.png")
@@ -30,3 +31,8 @@ CRATE_SPRITESHEET_ABS_PATH = str(OBJECTS_DIR / "crate_spritesheet.png")
 LEVEL_1_JSON_PATH = str(JSON_LEVELS_DIR / "level1.json")
 LEVEL_1_ABS_PATH = str(LEVELS_DIR / "Level_1.png")
 LEVEL_1_COLL_MASK = str(COLLISION_MASK_DIR / "Level_1_Collision_Mask.png")
+
+# Level 2
+LEVEL_2_JSON_PATH = str(JSON_LEVELS_DIR / "level2.json")
+LEVEL_2_ABS_PATH = str(LEVELS_DIR / "Level_2.png")
+LEVEL_2_COLL_MASK = str(COLLISION_MASK_DIR / "Level_2_Collision_Mask.png")

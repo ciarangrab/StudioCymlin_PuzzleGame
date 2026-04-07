@@ -14,6 +14,8 @@ class Cow(GameSprite):
 
         super().__init__(scale)
 
+        self.spriteID = 0
+
         # Set sprite sheet image
         try:
             self.sprite_sheet = pygame.image.load(COW_SPRITESHEET_ABS_PATH)
