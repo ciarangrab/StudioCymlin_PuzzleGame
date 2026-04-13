@@ -58,40 +58,47 @@ class Cow(GameSprite):
 
         # ---- Movement and Collision ----
         # [ Cow movement controlled by arrow keys ]
+        # Only one direction allowed per frame (no diagonal movement, like duck)
 
-        # Save x starting position
-        self.x = self.rect.x
-
-        # x-axis movement
         if keys[pygame.K_LEFT]:
+            self.x = self.rect.x
             self.rect.x -= int(PIXELS_PER_SECOND * dt)
             self.direction = "left"
             self.is_moving = True
+            
+            # Check for x-axis collisions
+            if level and level.check_wall_collision(self):
+                self.rect.x = self.x
+
         elif keys[pygame.K_RIGHT]:
+            self.x = self.rect.x
             self.rect.x += int(PIXELS_PER_SECOND * dt)
             self.direction = "right"
             self.is_moving = True
+            
+            # Check for x-axis collisions
+            if level and level.check_wall_collision(self):
+                self.rect.x = self.x
 
-        # Check for x-axis collisions
-        if level and level.check_wall_collision(self):
-            self.rect.x = self.x    # Restores previous position
-
-        # Save y starting position
-        self.y = self.rect.y
-
-        # y-axis movement
-        if keys[pygame.K_UP]:
+        elif keys[pygame.K_UP]:
+            self.y = self.rect.y
             self.rect.y -= int(PIXELS_PER_SECOND * dt)
             self.direction = "up"
             self.is_moving = True
+            
+            # Check for y-axis collisions
+            if level and level.check_wall_collision(self):
+                self.rect.y = self.y
+
         elif keys[pygame.K_DOWN]:
+            self.y = self.rect.y
             self.rect.y += int(PIXELS_PER_SECOND * dt)
             self.direction = "down"
             self.is_moving = True
-
-        # Check for y-axis collisions
-        if level and level.check_wall_collision(self):
-            self.rect.y = self.y    #Restores previous position
+            
+            # Check for y-axis collisions
+            if level and level.check_wall_collision(self):
+                self.rect.y = self.y
 
         self.x = self.rect.x
         self.y = self.rect.y

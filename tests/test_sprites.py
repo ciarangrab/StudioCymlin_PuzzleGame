@@ -63,6 +63,75 @@ class DuckKey(pygame.sprite.Sprite):
             self.rect.centery = duck.rect.centery + self.follow_offset_y
 
 
+class Button(pygame.sprite.Sprite):
+    def __init__(self, x, y, scale=2):
+        super().__init__()
+        
+        spritesheet_path = os.path.abspath(
+            os.path.join(
+                os.path.dirname(__file__),
+                '..',
+                'assets',
+                'images',
+                'sprites',
+                'objects',
+                'buttons_spritesheet.png'
+            )
+        )
+        self.spritesheet = pygame.image.load(spritesheet_path).convert_alpha()
+        
+        # Button dimensions: width=16, height=14
+        frame_width = 20
+        frame_height = 14
+        frame_count = self.spritesheet.get_width() // frame_width
+        
+        # Extract all frames
+        self.frames = []
+        for i in range(frame_count):
+            frame = self.spritesheet.subsurface((i * frame_width, 0, frame_width, frame_height))
+            frame = pygame.transform.scale(frame, (frame_width * scale, frame_height * scale))
+            self.frames.append(frame)
+        
+        # Animation setup
+        self.frame_index = 0
+        self.animation_speed = 8  # frames per second
+        self.frame_timer = 0
+        self.crate_touching = False
+        self.was_touching = False
+        self.animating = False
+        self.animation_direction = 1  # 1 for forward, -1 for backward
+        
+        self.image = self.frames[0]
+        self.rect = self.image.get_rect(topleft=(x, y))
+    
+    def animate(self, dt):
+        """Animate forward when crate touches, backward when it leaves using discrete frames."""
+        if self.animating:
+            # Track time until next frame
+            self.frame_timer += dt
+            frame_duration = 1.0 / self.animation_speed  # Time per frame
+            
+            if self.frame_timer >= frame_duration:
+                self.frame_timer = 0
+                self.frame_index += self.animation_direction
+                
+                # Check bounds and stop animation
+                if self.animation_direction == 1:  # Forward
+                    if self.frame_index >= len(self.frames) - 1:
+                        self.frame_index = len(self.frames) - 1
+                        self.animating = False
+                else:  # Backward
+                    if self.frame_index <= 0:
+                        self.frame_index = 0
+                        self.animating = False
+            
+            self.image = self.frames[int(self.frame_index)]
+    
+    def update(self, dt):
+        self.animate(dt)
+
+
+
 def main():
     pygame.init()
 
@@ -97,6 +166,10 @@ def main():
     # Spawn the duck's key
     duck_key = DuckKey(x=890, y=330)
     all_sprites.add(duck_key)
+
+    # Spawn a button
+    button = Button(x=600, y=200, scale=2)
+    all_sprites.add(button)
 
     # Track whether the duck currently has the key
     duck_has_key = False
@@ -134,6 +207,23 @@ def main():
                 my_crate.rect.y -= int(push_speed * dt)
             elif my_cow.direction == "down":
                 my_crate.rect.y += int(push_speed * dt)
+        
+        # Check if crate is touching button
+        if my_crate.rect.colliderect(button.rect):
+            if not button.was_touching:
+                # Crate just started touching: play forward animation
+                button.was_touching = True
+                button.animating = True
+                button.animation_direction = 1
+        else:
+            if button.was_touching:
+                # Crate just stopped touching: play backward animation
+                button.was_touching = False
+                button.animating = True
+                button.animation_direction = -1
+        
+        # Update button animation
+        button.update(dt)
         
         #duck collects key by touching it
         if duck_key.alive() and not duck_key.collected and my_duck.rect.colliderect(duck_key.rect):
