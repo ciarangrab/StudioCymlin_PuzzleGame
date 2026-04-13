@@ -1,12 +1,14 @@
 import pygame
 import sys
 import os
+import json
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.settings import LEVEL_1_ABS_PATH
 from src.sprites.cow import Cow
 from src.sprites.duck import Duck
 from src.sprites.crate import Crate
+from src.sprites.fence import Fence
 
 class DuckKey(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -105,7 +107,6 @@ class Button(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=(x, y))
     
     def animate(self, dt):
-        """Animate forward when crate touches, backward when it leaves using discrete frames."""
         if self.animating:
             # Track time until next frame
             self.frame_timer += dt
@@ -140,6 +141,18 @@ def main():
     screen = pygame.display.set_mode((screen_width, screen_height))
     pygame.display.set_caption("Sprite Movement & Animation Test")
 
+    # Load level data from JSON
+    level_json_path = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            '..',
+            'levels',
+            'level1.json'
+        )
+    )
+    with open(level_json_path, 'r') as f:
+        level_data = json.load(f)
+
     # Load background
     try:
         background_image = pygame.image.load(LEVEL_1_ABS_PATH).convert()
@@ -155,7 +168,8 @@ def main():
     all_sprites = pygame.sprite.Group()
 
     # Spawn cow and duck at different positions so they don't overlap
-    my_crate = Crate(x=screen_width // 2, y=screen_height // 2 + 100, scale=2)
+    crate_pos = level_data.get("crates_start", [[640, 400]])[0]
+    my_crate = Crate(x=crate_pos[0], y=crate_pos[1], scale=1.3)
     my_cow = Cow(x=21, y=375, scale=2)
     my_duck = Duck(x=1015, y=500, scale=2)
     
@@ -168,8 +182,14 @@ def main():
     all_sprites.add(duck_key)
 
     # Spawn a button
-    button = Button(x=600, y=200, scale=2)
+    button_pos = level_data.get("buttons_start", [[600, 200]])[0]
+    button = Button(x=button_pos[0], y=button_pos[1], scale=2)
     all_sprites.add(button)
+
+    # Spawn a fence
+    fence_pos = level_data.get("fences_start", [[700, 300]])[0]
+    fence = Fence(x=fence_pos[0], y=fence_pos[1], scale=2)
+    all_sprites.add(fence)
 
     # Track whether the duck currently has the key
     duck_has_key = False
@@ -215,12 +235,21 @@ def main():
                 button.was_touching = True
                 button.animating = True
                 button.animation_direction = 1
+            # Crate touching: fence animates backwards
+            if not fence.animating:
+                fence.animating = True
+                fence.animation_direction = -1
         else:
             if button.was_touching:
                 # Crate just stopped touching: play backward animation
                 button.was_touching = False
                 button.animating = True
                 button.animation_direction = -1
+            # Crate not touching: fence animates forwards (unless already at last frame)
+            if fence.frame_index < len(fence.frames) - 1:
+                if not fence.animating:
+                    fence.animating = True
+                    fence.animation_direction = 1
         
         # Update button animation
         button.update(dt)
@@ -229,6 +258,9 @@ def main():
         if duck_key.alive() and not duck_key.collected and my_duck.rect.colliderect(duck_key.rect):
             duck_key.collected = True
             duck_has_key = True
+
+        # Update fence animation
+        fence.update(dt)
 
         # --- Draw ---
         if background_image:

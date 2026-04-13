@@ -5,6 +5,7 @@ from src.settings import LEVELS_DIR, COLLISION_MASK_DIR
 from src.sprites.cow import Cow
 from src.sprites.duck import Duck
 from src.sprites.crate import Crate
+from src.sprites.fence import Fence
 from tests.test_sprites import DuckKey
 
 class GameLevel:
@@ -29,6 +30,7 @@ class GameLevel:
         self.key_start_pos = level_data.get("key_start", [0,0])
         self.buttons_start_pos = level_data.get("buttons_start", [[0,0], [0,0]])
         self.crates_start_pos = level_data.get("crates_start", [[0,0], [0,0]])
+        self.fences_start_pos = level_data.get("fences_start", [[0,0]])
 
         # Load the level background
         self.background_image = pygame.image.load(str(bg_path)).convert()
@@ -57,6 +59,13 @@ class GameLevel:
         for crates in self.crates_start_pos:
             crate = Crate(x=crates[0], y=crates[1], scale=2)
             self.all_sprites.add(crate)
+
+        # -- Fences --
+        self.fences = []
+        for fence_pos in self.fences_start_pos:
+            fence = Fence(x=fence_pos[0], y=fence_pos[1], scale=2)
+            self.all_sprites.add(fence)
+            self.fences.append(fence)
 
         # -- Buttons --
         # TODO Add in for loop to load buttons after creating button class
