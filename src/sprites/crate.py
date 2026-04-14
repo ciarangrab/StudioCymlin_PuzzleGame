@@ -17,7 +17,7 @@ class Crate(GameSprite):
             return
 
         sprite_width = 27
-        sprite_height = 32
+        sprite_height = 27
         sheet_width = self.sprite_sheet.get_width()
         frame_count = sheet_width // sprite_width
 
