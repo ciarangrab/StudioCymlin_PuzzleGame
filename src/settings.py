@@ -26,6 +26,7 @@ DUCK_SPRITESHEET_ABS_PATH = str(SPRITES_DIR / "duck_spritesheet.png")
 
 # Objects
 CRATE_SPRITESHEET_ABS_PATH = str(OBJECTS_DIR / "crate_spritesheet.png")
+KEY_SPRITESHEET_ABS_PATH = str(OBJECTS_DIR / "key_spritesheet.png")
 
 # Level 1
 LEVEL_1_JSON_PATH = str(JSON_LEVELS_DIR / "level1.json")

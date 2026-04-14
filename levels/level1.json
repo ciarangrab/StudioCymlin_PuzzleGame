@@ -9,7 +9,10 @@
     [412, 165]
   ],
   "crates_start": [
-    [600, 165]
+    {
+      "position": [600, 165],
+      "locked": true
+    }
   ],
   "fences_start": [
     [1020, 215]

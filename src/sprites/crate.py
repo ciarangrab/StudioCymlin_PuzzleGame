@@ -5,10 +5,19 @@ from src.sprites.game_sprite import GameSprite
 
 
 class Crate(GameSprite):
-    def __init__(self, x: int, y: int, scale: int = 1):
-        """Extract crate frames from the crate spritesheet (27x32 cells)."""
+    def __init__(self, x: int, y: int, scale: int = 1, locked: bool = False):
+        """Extract crate frames from the crate spritesheet (27x32 cells).
+        
+        Args:
+            x: X position
+            y: Y position
+            scale: Scale factor for the sprite
+            locked: If True, displays as frame 2 (locked state)
+        """
 
         super().__init__(scale)
+        
+        self.locked = locked
 
         try:
             self.sprite_sheet = pygame.image.load(CRATE_SPRITESHEET_ABS_PATH)
@@ -38,10 +47,18 @@ class Crate(GameSprite):
             self.image = pygame.Surface((sprite_width * scale, sprite_height * scale), pygame.SRCALPHA)
             self.image.fill((0, 0, 0, 0))
         else:
-            self.image = self.walk_right_frames[0]
+            # If locked, show frame 2; otherwise show frame 0
+            frame_index = 2 if self.locked and len(self.walk_right_frames) > 2 else 0
+            self.image = self.walk_right_frames[frame_index]
 
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
+
+    def unlock(self):
+        """Unlock the crate and update visual representation."""
+        self.locked = False
+        if len(self.walk_right_frames) > 0:
+            self.image = self.walk_right_frames[0]
 
     def get_all_frames(self):
         """Return a list of all extracted crate animation frames."""

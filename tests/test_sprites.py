@@ -173,25 +173,31 @@ def main():
     button = Button(x=button_pos[0], y=button_pos[1], scale=2)
     all_sprites.add(button)
 
-    my_cow = Cow(x=21, y=375, scale=2)
-    my_duck = Duck(x=1015, y=500, scale=2)
-   
-    all_sprites.add(my_cow)
-    all_sprites.add(my_duck)
-
-    # Spawn the duck's key
-    duck_key = DuckKey(x=890, y=330)
-    all_sprites.add(duck_key)
-
     # Spawn a crate
-    crate_pos = level_data.get("crates_start", [[640, 400]])[0]
-    my_crate = Crate(x=crate_pos[0], y=crate_pos[1], scale=1.3)
+    crate_data = level_data.get("crates_start", [{"position": [640, 400], "locked": False}])[0]
+    if isinstance(crate_data, dict):
+        crate_pos = crate_data.get("position", [640, 400])
+        locked = crate_data.get("locked", False)
+        my_crate = Crate(x=crate_pos[0], y=crate_pos[1], scale=1.3, locked=locked)
+    else:
+        # Old format: just coordinates
+        my_crate = Crate(x=crate_data[0], y=crate_data[1], scale=1.3)
     all_sprites.add(my_crate)
+
+    my_cow = Cow(x=21, y=375, scale=2)
+    all_sprites.add(my_cow)
 
     # Spawn a fence
     fence_pos = level_data.get("fences_start", [[700, 300]])[0]
     fence = Fence(x=fence_pos[0], y=fence_pos[1], scale=2)
     all_sprites.add(fence)
+
+    my_duck = Duck(x=1015, y=500, scale=2)
+    all_sprites.add(my_duck)
+
+    # Spawn the duck's key
+    duck_key = DuckKey(x=890, y=330)
+    all_sprites.add(duck_key)
 
     # Create a collision handler for the cow to check fence collisions
     class CollisionHandler:
@@ -238,8 +244,8 @@ def main():
         if duck_key.alive():
             duck_key.update(dt, my_duck)
         
-        # Cow pushes crate
-        if my_cow.rect.colliderect(my_crate.rect) and my_cow.is_moving:
+        # Cow pushes crate (only if crate is not locked)
+        if my_cow.rect.colliderect(my_crate.rect) and my_cow.is_moving and not my_crate.locked:
             push_speed = 200  # pixels per second
             if my_cow.direction == "left":
                 my_crate.rect.x -= int(push_speed * dt)
@@ -249,6 +255,11 @@ def main():
                 my_crate.rect.y -= int(push_speed * dt)
             elif my_cow.direction == "down":
                 my_crate.rect.y += int(push_speed * dt)
+        
+        # Key touches locked crate: unlock it and consume the key
+        if duck_key.alive() and my_crate.locked and duck_key.rect.colliderect(my_crate.rect):
+            my_crate.unlock()
+            duck_key.kill()
         
         # Check if crate is touching button
         if my_crate.rect.colliderect(button.rect):
@@ -302,6 +313,7 @@ def main():
             f"FPS: {clock.get_fps():.1f}",
             f"Cow    | pos: ({my_cow.rect.x}, {my_cow.rect.y})  dir: {my_cow.direction}  moving: {my_cow.is_moving}  frame: {int(my_cow.frame_index)}",
             f"Duck   | pos: ({my_duck.rect.x}, {my_duck.rect.y})  dir: {my_duck.direction}  moving: {my_duck.is_moving}  frame: {int(my_duck.frame_index)}",
+            f"Crate  | pos: ({my_crate.rect.x}, {my_crate.rect.y})  locked: {my_crate.locked}",
             f"Duck Has Key: {duck_has_key}",
             f"Key Collected: {duck_key.collected if duck_key.alive() else False}",
         ]

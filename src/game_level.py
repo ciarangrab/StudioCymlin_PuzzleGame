@@ -29,7 +29,7 @@ class GameLevel:
         self.duck_start_pos = level_data.get("duck_start", [0,0])
         self.key_start_pos = level_data.get("key_start", [0,0])
         self.buttons_start_pos = level_data.get("buttons_start", [[0,0], [0,0]])
-        self.crates_start_pos = level_data.get("crates_start", [[0,0], [0,0]])
+        self.crates_start_pos = level_data.get("crates_start", [{"position": [0,0], "locked": False}])
         self.fences_start_pos = level_data.get("fences_start", [[0,0]])
 
         # Load the level background
@@ -56,8 +56,15 @@ class GameLevel:
         self.all_sprites.add(duck_key)
 
         # -- Crates --
-        for crates in self.crates_start_pos:
-            crate = Crate(x=crates[0], y=crates[1], scale=2)
+        for crate_data in self.crates_start_pos:
+            # Handle both old format [x, y] and new format with {"position": [x, y], "locked": bool}
+            if isinstance(crate_data, dict):
+                x, y = crate_data.get("position", [0, 0])
+                locked = crate_data.get("locked", False)
+                crate = Crate(x=x, y=y, scale=2, locked=locked)
+            else:
+                # Old format: just coordinates
+                crate = Crate(x=crate_data[0], y=crate_data[1], scale=2)
             self.all_sprites.add(crate)
 
         # -- Fences --
