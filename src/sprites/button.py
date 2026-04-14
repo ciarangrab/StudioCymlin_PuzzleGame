@@ -1,28 +1,17 @@
 import pygame
 import os
+from src.settings import BUTTON_SPRITESHEET_ABS_PATH
 
 
 class Button(pygame.sprite.Sprite):
     def __init__(self, x, y, scale=2):
         super().__init__()
         
-        spritesheet_path = os.path.abspath(
-            os.path.join(
-                os.path.dirname(__file__),
-                '..',
-                '..',
-                'assets',
-                'images',
-                'sprites',
-                'objects',
-                'buttons_spritesheet.png'
-            )
-        )
-        self.spritesheet = pygame.image.load(spritesheet_path).convert_alpha()
+        self.spritesheet = pygame.image.load(BUTTON_SPRITESHEET_ABS_PATH).convert_alpha()
         
-        # Button dimensions: width=16, height=14
+        # Button dimensions
         frame_width = 20
-        frame_height = 20
+        frame_height = 18
         frame_count = self.spritesheet.get_width() // frame_width
         
         # Extract all frames
@@ -66,5 +55,5 @@ class Button(pygame.sprite.Sprite):
             
             self.image = self.frames[int(self.frame_index)]
     
-    def update(self, dt):
+    def update(self, dt, level=None):
         self.animate(dt)

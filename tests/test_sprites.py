@@ -129,7 +129,7 @@ class Button(pygame.sprite.Sprite):
             
             self.image = self.frames[int(self.frame_index)]
     
-    def update(self, dt):
+    def update(self, dt, level=None):
         self.animate(dt)
 
 

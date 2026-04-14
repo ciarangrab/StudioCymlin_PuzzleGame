@@ -6,6 +6,7 @@ from src.sprites.cow import Cow
 from src.sprites.duck import Duck
 from src.sprites.crate import Crate
 from src.sprites.fence import Fence
+from src.sprites.button import Button
 from tests.test_sprites import DuckKey
 
 class GameLevel:
@@ -28,7 +29,7 @@ class GameLevel:
         self.cow_start_pos = level_data.get("cow_start", [0,0])
         self.duck_start_pos = level_data.get("duck_start", [0,0])
         self.key_start_pos = level_data.get("key_start", [0,0])
-        self.buttons_start_pos = level_data.get("buttons_start", [[0,0], [0,0]])
+        self.buttons_start_pos = level_data.get("buttons_start", [[0,0]])
         self.crates_start_pos = level_data.get("crates_start", [{"position": [0,0], "locked": False}])
         self.fences_start_pos = level_data.get("fences_start", [[0,0]])
 
@@ -76,6 +77,11 @@ class GameLevel:
 
         # -- Buttons --
         # TODO Add in for loop to load buttons after creating button class
+        self.buttons = []
+        for button_pos in self.buttons_start_pos:
+            button = Button(x=button_pos[0], y=button_pos[1], scale=2)
+            self.all_sprites.add(button)
+            self.buttons.append(button)
 
         # --- Character Sprites ---
         # -- Cow --
