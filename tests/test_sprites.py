@@ -9,6 +9,7 @@ from src.sprites.cow import Cow
 from src.sprites.duck import Duck
 from src.sprites.crate import Crate
 from src.sprites.fence import Fence
+from src.sprites.button import Button
 
 class DuckKey(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -165,15 +166,16 @@ def main():
     fps = 60
     font = pygame.font.SysFont(None, 28)
 
-    all_sprites = pygame.sprite.Group()
+    all_sprites = pygame.sprite.Group()    
+    
+    # Spawn a button
+    button_pos = level_data.get("buttons_start", [[600, 200]])[0]
+    button = Button(x=button_pos[0], y=button_pos[1], scale=2)
+    all_sprites.add(button)
 
-    # Spawn cow and duck at different positions so they don't overlap
-    crate_pos = level_data.get("crates_start", [[640, 400]])[0]
-    my_crate = Crate(x=crate_pos[0], y=crate_pos[1], scale=1.3)
     my_cow = Cow(x=21, y=375, scale=2)
     my_duck = Duck(x=1015, y=500, scale=2)
-    
-    all_sprites.add(my_crate)
+   
     all_sprites.add(my_cow)
     all_sprites.add(my_duck)
 
@@ -181,15 +183,35 @@ def main():
     duck_key = DuckKey(x=890, y=330)
     all_sprites.add(duck_key)
 
-    # Spawn a button
-    button_pos = level_data.get("buttons_start", [[600, 200]])[0]
-    button = Button(x=button_pos[0], y=button_pos[1], scale=2)
-    all_sprites.add(button)
+    # Spawn a crate
+    crate_pos = level_data.get("crates_start", [[640, 400]])[0]
+    my_crate = Crate(x=crate_pos[0], y=crate_pos[1], scale=1.3)
+    all_sprites.add(my_crate)
 
     # Spawn a fence
     fence_pos = level_data.get("fences_start", [[700, 300]])[0]
     fence = Fence(x=fence_pos[0], y=fence_pos[1], scale=2)
     all_sprites.add(fence)
+
+    # Create a collision handler for the cow to check fence collisions
+    class CollisionHandler:
+        def __init__(self, fence):
+            self.fences = [fence]
+        
+        def check_fence_collision(self, sprite):
+            """Check if sprite collides with any visible fence"""
+            for fence in self.fences:
+                # Only check collision with visible fences (frame_index > 0)
+                if fence.frame_index > 0:
+                    if sprite.rect.colliderect(fence.rect):
+                        return True
+            return False
+        
+        def check_wall_collision(self, sprite):
+            """No wall collision check needed in test mode"""
+            return False
+    
+    collision_handler = CollisionHandler(fence)
 
     # Track whether the duck currently has the key
     duck_has_key = False
@@ -211,7 +233,7 @@ def main():
                     duck_has_key = False
 
         # --- Update ---
-        my_cow.update(dt)
+        my_cow.update(dt, collision_handler)
         my_duck.update(dt)
         if duck_key.alive():
             duck_key.update(dt, my_duck)

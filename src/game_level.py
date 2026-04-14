@@ -106,6 +106,15 @@ class GameLevel:
         # Check for overlap --> anything other than None means a collision with the wall
         return self.mask.overlap(sprite.mask, (offset_x, offset_y)) is not None
 
+    def check_fence_collision(self, sprite):
+        """ Returns True if the sprite collides with any visible fence """
+        for fence in self.fences:
+            # Only check collision with visible fences (frame_index > 0)
+            if fence.frame_index > 0:
+                if sprite.rect.colliderect(fence.rect):
+                    return True
+        return False
+
     def draw_debug_masks(self, surface):
         """ Renders the invisible collision data to the screen. Walls = Red, Sprites = Blue """
 

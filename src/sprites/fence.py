@@ -32,6 +32,9 @@ class Fence(pygame.sprite.Sprite):
             frame = pygame.transform.scale(frame, (frame_width * scale, frame_height * scale))
             self.frames.append(frame)
         
+        # Create transparent image for when fence is fully down
+        self.transparent_surface = pygame.Surface((frame_width * scale, frame_height * scale), pygame.SRCALPHA)
+        
         # Animation setup
         self.frame_index = len(self.frames) - 1
         self.animation_speed = 8  # frames per second
@@ -62,6 +65,14 @@ class Fence(pygame.sprite.Sprite):
                         self.frame_index = 0
                         self.animating = False
             
+            self.image = self.frames[int(self.frame_index)]
+        
+        # Fence is visible at all times EXCEPT when fully down (frame 0)
+        if self.frame_index == 0:
+            # Use transparent image when fully down
+            self.image = self.transparent_surface
+        else:
+            # Use normal frame image when not at frame 0
             self.image = self.frames[int(self.frame_index)]
     
     def update(self, dt, level=None):

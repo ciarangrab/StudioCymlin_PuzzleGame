@@ -67,7 +67,7 @@ class Cow(GameSprite):
             self.is_moving = True
             
             # Check for x-axis collisions
-            if level and level.check_wall_collision(self):
+            if level and (level.check_wall_collision(self) or level.check_fence_collision(self)):
                 self.rect.x = self.x
 
         elif keys[pygame.K_RIGHT]:
@@ -77,7 +77,7 @@ class Cow(GameSprite):
             self.is_moving = True
             
             # Check for x-axis collisions
-            if level and level.check_wall_collision(self):
+            if level and (level.check_wall_collision(self) or level.check_fence_collision(self)):
                 self.rect.x = self.x
 
         elif keys[pygame.K_UP]:
@@ -87,7 +87,7 @@ class Cow(GameSprite):
             self.is_moving = True
             
             # Check for y-axis collisions
-            if level and level.check_wall_collision(self):
+            if level and (level.check_wall_collision(self) or level.check_fence_collision(self)):
                 self.rect.y = self.y
 
         elif keys[pygame.K_DOWN]:
@@ -97,7 +97,7 @@ class Cow(GameSprite):
             self.is_moving = True
             
             # Check for y-axis collisions
-            if level and level.check_wall_collision(self):
+            if level and (level.check_wall_collision(self) or level.check_fence_collision(self)):
                 self.rect.y = self.y
 
         self.x = self.rect.x
