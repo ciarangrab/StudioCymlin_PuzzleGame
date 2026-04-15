@@ -13,6 +13,22 @@ from src.sprites.button import Button
 from src.sprites.fence import Fence
 from src.settings import LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH
 
+def load_level(json_path):
+    level = GameLevel(json_path)
+    my_cow, my_duck, duck_key = None, None, None
+    crates, fences, buttons = [], [], []
+
+    for sprite in level.all_sprites:
+        if isinstance(sprite, Cow): my_cow = sprite
+        elif isinstance(sprite, Duck): my_duck = sprite
+        elif isinstance(sprite, Crate): crates.append(sprite)
+        elif isinstance(sprite, Button): buttons.append(sprite)
+        elif isinstance(sprite, Fence): fences.append(sprite)
+        elif type(sprite).__name__ == "DuckKey": duck_key = sprite
+
+    return level, my_cow, my_duck, duck_key, crates, fences, buttons
+
+
 
 # from src.sprites.duck_key import DuckKey # Make sure to import this if needed for type checking!
 
@@ -30,13 +46,10 @@ def main():
     font = pygame.font.SysFont(None, 28)
 
     # --- Load the Level ---
-    json_path = LEVEL_2_JSON_PATH
-    try:
-        current_level = GameLevel(json_path)
-    except Exception as e:
-        print(f"Error loading level: {e}")
-        pygame.quit()
-        sys.exit()
+    level_paths = [LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH]
+    current_level_index = 0
+    current_level, my_cow, my_duck, duck_key, crates, fences, buttons = load_level(level_paths[current_level_index])
+    duck_has_key = False
 
     # --- Find Specific Sprites ---
     # We need to extract the specific actors from the level's sprite group
@@ -88,6 +101,16 @@ def main():
         # --- Update Logic ---
         # 1. Update all sprites in the level
         current_level.update(dt)
+
+        # --- Level Switch: cow walks off the right edge ---
+        if my_cow and my_cow.rect.left > 1280:
+            current_level_index += 1
+            if current_level_index < len(level_paths):
+                current_level, my_cow, my_duck, duck_key, crates, fences, buttons = load_level(level_paths[current_level_index])
+                duck_has_key = False
+            else:
+                print("All levels complete!")
+                running = False
 
         if duck_key and duck_key.alive():
             try:

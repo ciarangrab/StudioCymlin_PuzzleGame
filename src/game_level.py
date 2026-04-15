@@ -62,10 +62,10 @@ class GameLevel:
             if isinstance(crate_data, dict):
                 x, y = crate_data.get("position", [0, 0])
                 locked = crate_data.get("locked", False)
-                crate = Crate(x=x, y=y, scale=2, locked=locked)
+                crate = Crate(x=x, y=y, scale=1.5, locked=locked)
             else:
                 # Old format: just coordinates
-                crate = Crate(x=crate_data[0], y=crate_data[1], scale=2)
+                crate = Crate(x=crate_data[0], y=crate_data[1], scale=1.5)
             self.all_sprites.add(crate)
 
         # -- Fences --
