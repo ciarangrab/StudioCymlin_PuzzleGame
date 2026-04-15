@@ -76,7 +76,6 @@ class GameLevel:
             self.fences.append(fence)
 
         # -- Buttons --
-        # TODO Add in for loop to load buttons after creating button class
         self.buttons = []
         for button_pos in self.buttons_start_pos:
             button = Button(x=button_pos[0], y=button_pos[1], scale=2)

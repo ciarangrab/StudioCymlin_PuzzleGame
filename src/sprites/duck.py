@@ -79,6 +79,10 @@ class Duck(GameSprite):
             self.direction = "down"
             self.is_moving = True
 
+        # Set Boundaries so the duck can't leave the screen
+        screen_bounds = pygame.Rect(0, 0, 1280, 720)
+        self.rect.clamp_ip(screen_bounds)
+
         self.x = self.rect.x
         self.y = self.rect.y
 

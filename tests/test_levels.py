@@ -9,6 +9,8 @@ from src.game_level import GameLevel
 from src.sprites.cow import Cow
 from src.sprites.duck import Duck
 from src.sprites.crate import Crate
+from src.sprites.button import Button
+from src.sprites.fence import Fence
 from src.settings import LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH
 
 
@@ -43,6 +45,8 @@ def main():
     my_duck = None
     duck_key = None
     crates = []
+    fences = []
+    buttons = []
 
     for sprite in current_level.all_sprites:
         # We use type() or isinstance() to identify the sprites
@@ -52,6 +56,10 @@ def main():
             my_duck = sprite
         elif isinstance(sprite, Crate):
             crates.append(sprite)
+        elif isinstance(sprite, Button):
+            buttons.append(sprite)
+        elif isinstance(sprite, Fence):
+            fences.append(sprite)
         # Note: Replace 'type(sprite).__name__' with isinstance(sprite, DuckKey) if imported
         elif type(sprite).__name__ == "DuckKey":
             duck_key = sprite
