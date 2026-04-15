@@ -29,9 +29,9 @@ class GameLevel:
         self.cow_start_pos = level_data.get("cow_start", [0,0])
         self.duck_start_pos = level_data.get("duck_start", [0,0])
         self.key_start_pos = level_data.get("key_start", [0,0])
-        self.buttons_start_pos = level_data.get("buttons_start", [[0,0]])
+        self.buttons_start_pos = level_data.get("buttons_start", [{"position:": [0,0], "target": ""}])
         self.crates_start_pos = level_data.get("crates_start", [{"position": [0,0], "locked": False}])
-        self.fences_start_pos = level_data.get("fences_start", [[0,0]])
+        self.fences_start_pos = level_data.get("fences_start", [{"position": [0,0], "id": ""}])
 
         # Load the level background
         self.background_image = pygame.image.load(str(bg_path)).convert()
@@ -70,15 +70,47 @@ class GameLevel:
 
         # -- Fences --
         self.fences = []
-        for fence_pos in self.fences_start_pos:
-            fence = Fence(x=fence_pos[0], y=fence_pos[1], scale=2)
+        self.fence_dict = {}
+
+        for fence_data in self.fences_start_pos:
+            # Handle both old format [x, y] and new format with {"position": [x, y], "id": str}
+            if isinstance(fence_data, dict):
+                x, y = fence_data.get("position", [0, 0])
+                fence_id = fence_data.get("id")
+            else:
+                # Old format: just coordinates
+                x, y = fence_data[0], fence_data[1]
+                fence_id = None
+
+            fence = Fence(x=x, y=y, scale=2)
             self.all_sprites.add(fence)
             self.fences.append(fence)
 
+            # If the JSON file provides an ID, save it to the dictionary
+            if fence_id:
+                self.fence_dict[fence_id] = fence
+
         # -- Buttons --
         self.buttons = []
-        for button_pos in self.buttons_start_pos:
-            button = Button(x=button_pos[0], y=button_pos[1], scale=2)
+        for button_data in self.buttons_start_pos:
+            # Handle dictionary format
+            if isinstance(button_data, dict):
+                x, y = button_data.get("position", [0, 0])
+                target_id = button_data.get("target")
+            else:
+                # Fallback for old list format [x, y]
+                x, y = button_data[0], button_data[1]
+                target_id = None
+                
+            button = Button(x=x, y=y, scale=2)
+
+            # If the button has a target ID and a fence has that ID give the button
+            # a direct reference to its linked fence obj
+            if target_id and target_id in self.fence_dict:
+                button.target_fence = self.fence_dict[target_id]
+            else:
+                button.target_fence = None
+                
             self.all_sprites.add(button)
             self.buttons.append(button)
 

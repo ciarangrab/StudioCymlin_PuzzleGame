@@ -169,8 +169,15 @@ def main():
     all_sprites = pygame.sprite.Group()    
     
     # Spawn a button
-    button_pos = level_data.get("buttons_start", [[600, 200]])[0]
-    button = Button(x=button_pos[0], y=button_pos[1], scale=2)
+    # Spawn a button
+    button_data = level_data.get("buttons_start", [{"position": [600, 200]}])[0]
+    if isinstance(button_data, dict):
+        b_x, b_y = button_data.get("position", [600, 200])
+    else:
+        # Fallback for old list format
+        b_x, b_y = button_data[0], button_data[1]
+    
+    button = Button(x=b_x, y=b_y, scale=2)
     all_sprites.add(button)
 
     # Spawn a crate
@@ -188,10 +195,17 @@ def main():
     all_sprites.add(my_cow)
 
     # Spawn a fence
-    fence_pos = level_data.get("fences_start", [[700, 300]])[0]
-    fence = Fence(x=fence_pos[0], y=fence_pos[1], scale=2)
+    fence_data = level_data.get("fences_start", [{"position": [700, 300]}])[0]
+    if isinstance(fence_data, dict):
+        f_x, f_y = fence_data.get("position", [700, 300])
+    else:
+        # Fallback for old list format
+        f_x, f_y = fence_data[0], fence_data[1]
+        
+    fence = Fence(x=f_x, y=f_y, scale=2)
     all_sprites.add(fence)
 
+    # Spawn a Duck
     my_duck = Duck(x=1015, y=500, scale=2)
     all_sprites.add(my_duck)
 

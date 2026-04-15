@@ -95,21 +95,119 @@ def main():
             except TypeError:
                 pass  # Failsafe in case duck_key doesn't actually take my_duck as an argument
 
-        # 2. Cow pushes crates
+        # 2. Crate Logic
         if my_cow:
             for crate in crates:
+                # --- Crate collision ---
                 if my_cow.rect.colliderect(crate.rect) and my_cow.is_moving:
-                    push_speed = 200  # pixels per second
-                    if my_cow.direction == "left":
-                        crate.rect.x -= int(push_speed * dt)
-                    elif my_cow.direction == "right":
-                        crate.rect.x += int(push_speed * dt)
-                    elif my_cow.direction == "up":
-                        crate.rect.y -= int(push_speed * dt)
-                    elif my_cow.direction == "down":
-                        crate.rect.y += int(push_speed * dt)
+                    
+                    # Check if the crate is locked --> If it is you can't push it
+                    if crate.locked:
+                        # Snap the cow to the edge of the locked crate so the cow doesn't clip
+                        if my_cow.direction == "left":
+                            my_cow.rect.left = crate.rect.right
+                        elif my_cow.direction == "right":
+                            my_cow.rect.right = crate.rect.left
+                        elif my_cow.direction == "up":
+                            my_cow.rect.top = crate.rect.bottom
+                        elif my_cow.direction == "down":
+                            my_cow.rect.bottom = crate.rect.top
+                            
+                        # Keep the cow's raw coordinates synced
+                        my_cow.x = my_cow.rect.x
+                        my_cow.y = my_cow.rect.y
+                        
+                        break # Stop checking this crate since we can't push it
 
-        # 3. Duck collects key
+                    # Save crate's starting position before modifying
+                    old_crate_x = crate.rect.x
+                    old_crate_y = crate.rect.y
+                    
+                    # 1. SNAP the crate to the cow to completely remove the clip/overlap
+                    if my_cow.direction == "left":
+                        crate.rect.right = my_cow.rect.left
+                    elif my_cow.direction == "right":
+                        crate.rect.left = my_cow.rect.right
+                    elif my_cow.direction == "up":
+                        crate.rect.bottom = my_cow.rect.top
+                    elif my_cow.direction == "down":
+                        crate.rect.top = my_cow.rect.bottom
+                        
+                    # 2. Check if the newly snapped crate hits ANOTHER crate
+                    hit_crate = any(crate != other_crate and crate.rect.colliderect(other_crate.rect) for other_crate in crates)
+                    
+                    # 3. Check if the crate hits a WALL or FENCE
+                    hit_wall = current_level.check_wall_collision(crate) or current_level.check_fence_collision(crate)
+
+                    # 4. If the crate is blocked, BOTH objects must stop
+                    if hit_crate or hit_wall:
+                        # Revert the crate to where it was
+                        crate.rect.x = old_crate_x
+                        crate.rect.y = old_crate_y
+                        
+                        # Snap the cow to the edge of the blocked crate so the cow doesn't clip
+                        if my_cow.direction == "left":
+                            my_cow.rect.left = crate.rect.right
+                        elif my_cow.direction == "right":
+                            my_cow.rect.right = crate.rect.left
+                        elif my_cow.direction == "up":
+                            my_cow.rect.top = crate.rect.bottom
+                        elif my_cow.direction == "down":
+                            my_cow.rect.bottom = crate.rect.top
+                            
+                        # Keep the cow's raw coordinates synced to its rect
+                        my_cow.x = my_cow.rect.x
+                        my_cow.y = my_cow.rect.y
+                        
+                        break # We hit an obstacle, stop checking this crate
+                
+                # --- Unlock Crate ---
+                # Key touches locked crate: unlock it and consume the key
+                if duck_key.alive() and crate.locked and duck_key.rect.colliderect(crate.rect):
+                    crate.unlock()
+                    duck_key.kill()
+
+        # 3. Handle Button and Fence Logic
+        for button in current_level.buttons:
+            
+            # Check if the cow or any crate in the list of crates is touching this specific button
+            is_pressed = any(crate.rect.colliderect(button.rect) for crate in crates) or my_cow.rect.colliderect(button.rect)
+
+            if is_pressed:
+                if not button.was_touching:
+                    # Object just started touching: play forward animation
+                    button.was_touching = True
+                    button.animating = True
+                    button.animation_direction = 1
+                
+                # Check if this button actually has a fence linked to it
+                if hasattr(button, 'target_fence') and button.target_fence is not None:
+                    linked_fence = button.target_fence
+                    
+                    # Object touching: fence animates backwards (opens)
+                    if not linked_fence.animating:
+                        linked_fence.animating = True
+                        linked_fence.animation_direction = -1
+                        
+            else:
+                if button.was_touching:
+                    # Object just stopped touching: play backward animation
+                    button.was_touching = False
+                    button.animating = True
+                    button.animation_direction = -1
+                
+                # Check if this button actually has a fence linked to it
+                if hasattr(button, 'target_fence') and button.target_fence is not None:
+                    linked_fence = button.target_fence
+                    
+                    # Object not touching: fence animates forwards (unless already at last frame)
+                    if linked_fence.frame_index < len(linked_fence.frames) - 1:
+                        if not linked_fence.animating:
+                            linked_fence.animating = True
+                            linked_fence.animation_direction = 1
+                
+
+        # 4. Duck collects key
         if duck_key and duck_key.alive() and not duck_key.collected and my_duck:
             if my_duck.rect.colliderect(duck_key.rect):
                 duck_key.collected = True

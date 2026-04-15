@@ -6,13 +6,28 @@
   "duck_start": [1015, 500],
   "key_start": [963, 218],
   "buttons_start": [
-    [438, 549],
-    [828, 597], 
-    [1015, 500]
+    {
+      "position": [438, 549], 
+      "target": "fence_1"
+    }, 
+    {
+      "position": [853, 621],  
+      "target": "fence_2"
+    }, 
+    {
+      "position": [398, 107],  
+      "target": "fence_3"
+    }
   ],
   "crates_start": [
     [295, 505],
-    [295, 575],
+    [295, 565],
     [690, 108]
+  ],
+  "fences_start": [
+    {
+      "position": [1064, 390], 
+      "id": "fence_2"
+    }
   ]
 }
