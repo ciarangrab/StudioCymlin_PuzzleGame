@@ -7,28 +7,49 @@
   "key_start": [963, 218],
   "buttons_start": [
     {
-      "position": [438, 549], 
+      "position": [449, 581], 
       "target": "fence_1"
     }, 
     {
-      "position": [853, 621],  
+      "position": [848, 629],  
       "target": "fence_2"
     }, 
     {
-      "position": [398, 107],  
+      "position": [392, 123],  
       "target": "fence_3"
     }
   ],
+
   "crates_start": [
-    [853, 621],
-    [595, 565],
-    [690, 108]
+    {
+      "position": [200, 580],
+      "locked": false
+    },
+    {
+      "position": [1000, 565],
+      "locked": false
+    },
+    {
+      "position": [690, 108],
+      "locked": true
+    }
   ],
+
   "fences_start": [
+    {
+      "position": [597, 460], 
+      "id": "fence_1",
+      "fence_type": 1
+    },
     {
       "position": [1064, 390], 
       "id": "fence_2",
       "fence_type": 2
+    },
+    {
+      "position": [1251, 462], 
+      "id": "fence_3",
+      "fence_type": 1
     }
   ]
 }
