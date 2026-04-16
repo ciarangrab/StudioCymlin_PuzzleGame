@@ -48,7 +48,7 @@ def main():
     # --- Load the Level ---
     level_paths = [LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH]
     current_level_index = 0
-    current_level, my_cow, my_duck, duck_key, crates, fences, buttons = load_level(level_paths[current_level_index])
+    current_level, buttons, crates, my_cow, my_duck, duck_key, fences = load_level(level_paths[current_level_index])
     duck_has_key = False
 
     # --- Find Specific Sprites ---

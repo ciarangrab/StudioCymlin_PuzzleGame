@@ -9,12 +9,28 @@
     {
       "position": [412, 165], 
       "target": "fence_1"
+    },
+    {
+      "position": [694, 393],  
+      "target": "fence_2"
+    }, 
+    {
+      "position": [490, 630],  
+      "target": "fence_3"
     }
       
   ],
   "crates_start": [
     {
       "position": [600, 160],
+      "locked": false
+    },
+    {
+      "position": [1000, 300],
+      "locked": false
+    },
+    {
+      "position": [490, 550],
       "locked": true
     }
   ],
@@ -22,6 +38,14 @@
     {
       "position": [1020, 215], 
       "id": "fence_1"
+    },
+    {
+      "position": [600, 500], 
+      "id": "fence_2"
+    },
+    {
+      "position": [1200, 300], 
+      "id": "fence_3"
     }
     
   ]
