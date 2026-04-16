@@ -27,7 +27,8 @@
   "fences_start": [
     {
       "position": [1064, 390], 
-      "id": "fence_2"
+      "id": "fence_2",
+      "fence_type": 2
     }
   ]
 }

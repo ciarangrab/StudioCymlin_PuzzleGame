@@ -29,6 +29,14 @@ CRATE_SPRITESHEET_ABS_PATH = str(OBJECTS_DIR / "crate_spritesheet.png")
 KEY_SPRITESHEET_ABS_PATH = str(OBJECTS_DIR / "key_spritesheet.png")
 BUTTON_SPRITESHEET_ABS_PATH = str(OBJECTS_DIR/ "buttons_spritesheet.png")
 
+# Fences
+FENCE_1_ABS_PATH = str(OBJECTS_DIR / "Bars_1.png")
+FENCE_2_ABS_PATH = str(OBJECTS_DIR / "Bars_2.png")
+FENCE_3_ABS_PATH = str(OBJECTS_DIR / "Bars_3.png")
+FENCE_5_ABS_PATH = str(OBJECTS_DIR / "Bars_5.png")
+FENCE_6_ABS_PATH = str(OBJECTS_DIR / "Bars_6.png")
+
+
 # Level 1
 LEVEL_1_JSON_PATH = str(JSON_LEVELS_DIR / "level1.json")
 LEVEL_1_ABS_PATH = str(LEVELS_DIR / "Level_1.png")
