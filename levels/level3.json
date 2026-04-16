@@ -2,28 +2,25 @@
   "name": "Level 3",
   "background_image": "Level_3.png",
   "collision_mask": "Level_3_Collision_Mask.png",
-  "cow_start": [21, 375],
-  "duck_start": [1015, 500],
-  "key_start": [890, 330],
+  "cow_start": [50, 302],
+  "duck_start": [145, 286],
+  "key_start": [1032, 623],
   "buttons_start": [
-    {
-      "position": [412, 165], 
-      "target": "fence_1"
-    }
-      
+    { "position": [332, 458], "target": "fence_1" },
+    { "position": [712, 546], "target": "fence_2" },
+    { "position": [911, 42], "target": "fence_3" },
+    { "position": [1110, 360], "target": "fence_4" }
   ],
   "crates_start": [
-    {
-      "position": [600, 160],
-      "locked": true
-    }
+    { "position": [330, 344], "locked": false },
+    { "position": [632, 546], "locked": false },
+    { "position": [724, 48], "locked": false },
+    { "position": [965, 351], "locked": true }
   ],
   "fences_start": [
-    {
-      "position": [1020, 215], 
-      "id": "fence_1",
-      "fence_type": 3
-    }
-    
+    { "position": [570, 456], "id": "fence_1", "fence_type": 4 },
+    { "position": [649, 210], "id": "fence_2", "fence_type": 3 },
+    { "position": [893, 210], "id": "fence_3", "fence_type": 3 },
+    { "position": [1221, 243], "id": "fence_4", "fence_type": 4 }
   ]
 }
