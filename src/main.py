@@ -35,6 +35,7 @@ def load_level(json_path):
 def main():
     # --- Initialization ---
     pygame.init()
+    pygame.mixer.init() 
 
     screen_width = 1280
     screen_height = 720

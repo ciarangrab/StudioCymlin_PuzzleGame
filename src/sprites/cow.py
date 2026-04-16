@@ -15,6 +15,7 @@ class Cow(GameSprite):
         super().__init__(scale)
 
         self.spriteID = 0
+        self.walk_sound_playing = False
 
         # Set sprite sheet image
         try:
@@ -22,6 +23,14 @@ class Cow(GameSprite):
         except FileNotFoundError:
             print("Error: Could not find 'assets/images/sprites/cow_spritesheet.png'")
             return
+
+        try:
+            self.walk_sound = pygame.mixer.Sound("assets/images/sfx/cow_walk.mp3")
+            self.walk_sound.set_volume(4)
+        except FileNotFoundError:
+            print("Error: Could not find cow walk sound")
+            self.walk_sound = None
+
 
         # Extract all frames
         for i in range(4):
@@ -99,6 +108,14 @@ class Cow(GameSprite):
             # Check for y-axis collisions
             if level and (level.check_wall_collision(self) or level.check_fence_collision(self)):
                 self.rect.y = self.y
+
+        if self.walk_sound:
+            if self.is_moving and not self.walk_sound_playing:
+                self.walk_sound.play(-1)
+                self.walk_sound_playing = True
+            elif not self.is_moving and self.walk_sound_playing:
+                self.walk_sound.stop()
+                self.walk_sound_playing = False
 
         self.x = self.rect.x
         self.y = self.rect.y

@@ -54,9 +54,21 @@ class Fence(pygame.sprite.Sprite):
         
         self.image = self.frames[-1]
         self.rect = self.image.get_rect(topleft=(x, y))
+
+        self.sound_playing = False
+        try:
+            self.move_sound = pygame.mixer.Sound("assets/images/sfx/fence.mp3")
+            self.move_sound.set_volume(2)
+        except FileNotFoundError:
+            print("Error: Could not find fence_move.mp3")
+            self.move_sound = None
     
     def animate(self, dt):
         if self.animating:
+            if self.move_sound and not self.sound_playing:
+                self.move_sound.play(-1)
+                self.sound_playing = True
+
             # Track time until next frame
             self.frame_timer += dt
             frame_duration = 1.0 / self.animation_speed  # Time per frame
@@ -77,13 +89,20 @@ class Fence(pygame.sprite.Sprite):
             
             self.image = self.frames[int(self.frame_index)]
         
-        # Fence is visible at all times EXCEPT when fully down (frame 0)
-        if self.frame_index == 0:
-            # Use transparent image when fully down
-            self.image = self.transparent_surface
-        else:
-            # Use normal frame image when not at frame 0
-            self.image = self.frames[int(self.frame_index)]
+            # Fence is visible at all times EXCEPT when fully down (frame 0)
+            if self.frame_index == 0:
+                # Use transparent image when fully down
+                self.image = self.transparent_surface
+                
+            if self.frame_index == 0 or self.frame_index == 3:
+                if self.move_sound and self.sound_playing:
+                    self.move_sound.stop()
+                    self.sound_playing = False
+    
+            else:
+                # Use normal frame image when not at frame 0
+                self.image = self.frames[int(self.frame_index)]
+    
     
     def update(self, dt, level=None):
         self.animate(dt)
