@@ -1,28 +1,38 @@
 import pygame
 import os
-
+from src.settings import FENCE_1_ABS_PATH, FENCE_2_ABS_PATH, FENCE_3_ABS_PATH, FENCE_5_ABS_PATH, FENCE_6_ABS_PATH
 
 class Fence(pygame.sprite.Sprite):
-    def __init__(self, x, y, scale=2):
+    def __init__(self, x, y, fence_type=0, scale=2):
         super().__init__()
+
+        fences = {0:FENCE_1_ABS_PATH, 1: FENCE_2_ABS_PATH, 2: FENCE_3_ABS_PATH, 3: FENCE_5_ABS_PATH, 4: FENCE_6_ABS_PATH}
         
-        spritesheet_path = os.path.abspath(
-            os.path.join(
-                os.path.dirname(__file__),
-                '..',
-                '..',
-                'assets',
-                'images',
-                'sprites',
-                'objects',
-                'Bars_1.png'
-            )
-        )
+        match (fence_type):
+            case 0:
+                spritesheet_path = fences.get(fence_type)
+                frame_width = 64
+                frame_height = 30
+            case 1:
+                spritesheet_path = fences.get(fence_type)
+                frame_width = 8 
+                frame_height = 81
+            case 2:
+                spritesheet_path = fences.get(fence_type)
+                frame_width = 44 
+                frame_height = 30
+            case 3:
+                spritesheet_path = fences.get(fence_type)
+                frame_width = 54 
+                frame_height = 30
+            case 4:
+                spritesheet_path = fences.get(fence_type)
+                frame_width = 8 
+                frame_height = 81
+
         self.spritesheet = pygame.image.load(spritesheet_path).convert_alpha()
         
         # Fence dimensions: width=50, height=30
-        frame_width = 44
-        frame_height = 30
         frame_count = self.spritesheet.get_width() // frame_width
         
         # Extract all frames

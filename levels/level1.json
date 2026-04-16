@@ -45,7 +45,9 @@
     },
     {
       "position": [1200, 300], 
-      "id": "fence_3"
+      "id": "fence_3",
+      "id": "fence_1",
+      "fence_type": 0
     }
     
   ]

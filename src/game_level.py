@@ -31,7 +31,7 @@ class GameLevel:
         self.cow_start_pos = level_data.get("cow_start", [0,0])
         self.duck_start_pos = level_data.get("duck_start", [0,0])
         self.key_start_pos = level_data.get("key_start", [0,0])
-        self.fences_start_pos = level_data.get("fences_start", [{"position": [0,0], "id": ""}])
+        self.fences_start_pos = level_data.get("fences_start", [{"position": [0,0], "id": "", "fence_type": 0}])
 
         # Load the level background
         self.background_image = pygame.image.load(str(bg_path)).convert()
@@ -60,12 +60,13 @@ class GameLevel:
             if isinstance(fence_data, dict):
                 x, y = fence_data.get("position", [0, 0])
                 fence_id = fence_data.get("id")
+                type_of_fence = fence_data.get("fence_type")
             else:
                 # Old format: just coordinates
                 x, y = fence_data[0], fence_data[1]
                 fence_id = None
 
-            fence = Fence(x=x, y=y, scale=2)
+            fence = Fence(x=x, y=y, fence_type=type_of_fence, scale=2)
             self.all_sprites.add(fence)
             self.fences.append(fence)
 

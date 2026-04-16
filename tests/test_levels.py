@@ -11,7 +11,7 @@ from src.sprites.duck import Duck
 from src.sprites.crate import Crate
 from src.sprites.button import Button
 from src.sprites.fence import Fence
-from src.settings import LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH
+from src.settings import LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH, LEVEL_3_JSON_PATH
 
 def load_level(json_path):
     level = GameLevel(json_path)
@@ -46,7 +46,7 @@ def main():
     font = pygame.font.SysFont(None, 28)
 
     # --- Load the Level ---
-    level_paths = [LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH]
+    level_paths = [LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH, LEVEL_3_JSON_PATH]
     current_level_index = 0
     current_level, buttons, crates, my_cow, my_duck, duck_key, fences = load_level(level_paths[current_level_index])
     duck_has_key = False
