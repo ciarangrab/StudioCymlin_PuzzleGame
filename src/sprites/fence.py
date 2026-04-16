@@ -15,7 +15,7 @@ class Fence(pygame.sprite.Sprite):
                 frame_height = 30
             case 1:
                 spritesheet_path = fences.get(fence_type)
-                frame_width = 8 
+                frame_width = 7
                 frame_height = 81
             case 2:
                 spritesheet_path = fences.get(fence_type)

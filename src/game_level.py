@@ -26,11 +26,11 @@ class GameLevel:
         mask_path  = COLLISION_MASK_DIR / level_data["collision_mask"]
 
         # Get sprite starting positions from level json file
+        self.buttons_start_pos = level_data.get("buttons_start", [{"position:": [0,0], "target": ""}])
+        self.crates_start_pos = level_data.get("crates_start", [{"position": [0,0], "locked": False}])
         self.cow_start_pos = level_data.get("cow_start", [0,0])
         self.duck_start_pos = level_data.get("duck_start", [0,0])
         self.key_start_pos = level_data.get("key_start", [0,0])
-        self.buttons_start_pos = level_data.get("buttons_start", [{"position:": [0,0], "target": ""}])
-        self.crates_start_pos = level_data.get("crates_start", [{"position": [0,0], "locked": False}])
         self.fences_start_pos = level_data.get("fences_start", [{"position": [0,0], "id": "", "fence_type": 0}])
 
         # Load the level background
@@ -50,23 +50,6 @@ class GameLevel:
         # ---- Load Sprites ----
         # Create sprite groups
         self.all_sprites = pygame.sprite.Group()
-
-        # --- Object Sprites ---
-        # -- Key --
-        duck_key = DuckKey(self.key_start_pos[0], self.key_start_pos[1])
-        self.all_sprites.add(duck_key)
-
-        # -- Crates --
-        for crate_data in self.crates_start_pos:
-            # Handle both old format [x, y] and new format with {"position": [x, y], "locked": bool}
-            if isinstance(crate_data, dict):
-                x, y = crate_data.get("position", [0, 0])
-                locked = crate_data.get("locked", False)
-                crate = Crate(x=x, y=y, scale=1.5, locked=locked)
-            else:
-                # Old format: just coordinates
-                crate = Crate(x=crate_data[0], y=crate_data[1], scale=1.5)
-            self.all_sprites.add(crate)
 
         # -- Fences --
         self.fences = []
@@ -114,6 +97,23 @@ class GameLevel:
                 
             self.all_sprites.add(button)
             self.buttons.append(button)
+
+        # --- Object Sprites ---
+        # -- Key --
+        duck_key = DuckKey(self.key_start_pos[0], self.key_start_pos[1])
+        self.all_sprites.add(duck_key)
+
+        # -- Crates --
+        for crate_data in self.crates_start_pos:
+            # Handle both old format [x, y] and new format with {"position": [x, y], "locked": bool}
+            if isinstance(crate_data, dict):
+                x, y = crate_data.get("position", [0, 0])
+                locked = crate_data.get("locked", False)
+                crate = Crate(x=x, y=y, scale=1.5, locked=locked)
+            else:
+                # Old format: just coordinates
+                crate = Crate(x=crate_data[0], y=crate_data[1], scale=1.5)
+            self.all_sprites.add(crate)
 
         # --- Character Sprites ---
         # -- Cow --

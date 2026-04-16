@@ -9,20 +9,46 @@
     {
       "position": [412, 165], 
       "target": "fence_1"
+    },
+    {
+      "position": [694, 393],  
+      "target": "fence_2"
+    }, 
+    {
+      "position": [490, 630],  
+      "target": "fence_3"
     }
       
   ],
   "crates_start": [
     {
       "position": [600, 160],
+      "locked": false
+    },
+    {
+      "position": [1000, 300],
+      "locked": false
+    },
+    {
+      "position": [490, 550],
       "locked": true
     }
   ],
   "fences_start": [
     {
-      "position": [1020, 215], 
+      "position": [998, 215], 
       "id": "fence_1",
       "fence_type": 0
+    },
+    {
+      "position": [637, 420], 
+      "id": "fence_2",
+      "fence_type": 1
+    },
+    {
+      "position": [1231, 276], 
+      "id": "fence_3",
+      "fence_type": 1
     }
     
   ]
