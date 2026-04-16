@@ -36,17 +36,17 @@
   ],
   "fences_start": [
     {
-      "position": [1020, 215], 
+      "position": [998, 215], 
       "id": "fence_1",
       "fence_type": 0
     },
     {
-      "position": [600, 500], 
+      "position": [637, 420], 
       "id": "fence_2",
       "fence_type": 1
     },
     {
-      "position": [1200, 300], 
+      "position": [1231, 276], 
       "id": "fence_3",
       "fence_type": 1
     }
