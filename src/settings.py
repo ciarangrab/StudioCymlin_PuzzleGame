@@ -38,3 +38,8 @@ LEVEL_1_COLL_MASK = str(COLLISION_MASK_DIR / "Level_1_Collision_Mask.png")
 LEVEL_2_JSON_PATH = str(JSON_LEVELS_DIR / "level2.json")
 LEVEL_2_ABS_PATH = str(LEVELS_DIR / "Level_2.png")
 LEVEL_2_COLL_MASK = str(COLLISION_MASK_DIR / "Level_2_Collision_Mask.png")
+
+# Level 3
+LEVEL_3_JSON_PATH = str(JSON_LEVELS_DIR / "level3.json")
+LEVEL_3_ABS_PATH = str(LEVELS_DIR / "Level_3.png")
+LEVEL_3_COLL_MASK = str(COLLISION_MASK_DIR / "Level_3_Collision_Mask.png")

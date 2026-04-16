@@ -1,0 +1,28 @@
+{
+  "name": "Level 3",
+  "background_image": "Level_3.png",
+  "collision_mask": "Level_3_Collision_Mask.png",
+  "cow_start": [21, 375],
+  "duck_start": [1015, 500],
+  "key_start": [890, 330],
+  "buttons_start": [
+    {
+      "position": [412, 165], 
+      "target": "fence_1"
+    }
+      
+  ],
+  "crates_start": [
+    {
+      "position": [600, 160],
+      "locked": true
+    }
+  ],
+  "fences_start": [
+    {
+      "position": [1020, 215], 
+      "id": "fence_1"
+    }
+    
+  ]
+}
