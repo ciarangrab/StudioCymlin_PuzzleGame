@@ -91,11 +91,6 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-                # Press E to use the key after collecting it
-                if event.key == pygame.K_e and duck_has_key:
-                    if duck_key:
-                        duck_key.kill()
-                    duck_has_key = False
 
         # Update logic
         # Update all sprites in the level
