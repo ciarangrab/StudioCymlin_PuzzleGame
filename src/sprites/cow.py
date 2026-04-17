@@ -65,7 +65,7 @@ class Cow(GameSprite):
         # Reset movement for movement check
         self.is_moving = False
 
-        # ---- Movement and Collision ----
+        # Movement and Collision
         # [ Cow movement controlled by arrow keys ]
         # Only one direction allowed per frame (no diagonal movement, like duck)
 

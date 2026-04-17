@@ -47,11 +47,11 @@ class GameLevel:
         self.mask = pygame.mask.from_threshold(mask_surface, pygame.Color('white'), (10, 10, 10, 255))
 
 
-        # ---- Load Sprites ----
+        # Load Sprites 
         # Create sprite groups
         self.all_sprites = pygame.sprite.Group()
 
-        # -- Fences --
+        # Fences
         self.fences = []
         self.fence_dict = {}
 
@@ -74,7 +74,7 @@ class GameLevel:
             if fence_id:
                 self.fence_dict[fence_id] = fence
 
-        # -- Buttons --
+        # Buttons
         self.buttons = []
         for button_data in self.buttons_start_pos:
             # Handle dictionary format
@@ -98,12 +98,12 @@ class GameLevel:
             self.all_sprites.add(button)
             self.buttons.append(button)
 
-        # --- Object Sprites ---
-        # -- Key --
+        # Object Sprites
+        # Key
         duck_key = DuckKey(self.key_start_pos[0], self.key_start_pos[1])
         self.all_sprites.add(duck_key)
 
-        # -- Crates --
+        # Crates
         for crate_data in self.crates_start_pos:
             # Handle both old format [x, y] and new format with {"position": [x, y], "locked": bool}
             if isinstance(crate_data, dict):
@@ -115,12 +115,12 @@ class GameLevel:
                 crate = Crate(x=crate_data[0], y=crate_data[1], scale=1.5)
             self.all_sprites.add(crate)
 
-        # --- Character Sprites ---
-        # -- Cow --
+        # Character Sprites 
+        # Cow
         cow = Cow(x=self.cow_start_pos[0], y=self.cow_start_pos[1], scale=2)
         self.all_sprites.add(cow)
 
-        # -- Duck --
+        # Duck 
         duck = Duck(x=self.duck_start_pos[0], y=self.duck_start_pos[1], scale=2)
         self.all_sprites.add(duck)
 
@@ -163,13 +163,13 @@ class GameLevel:
     def draw_debug_masks(self, surface):
         """ Renders the invisible collision data to the screen. Walls = Red, Sprites = Blue """
 
-        # 1. Paint the level's wall mask RED
+        # Paint the level's wall mask RED
         if hasattr(self, 'mask'):
             # setcolor is the solid part, unsetcolor is the transparent part
             wall_surface = self.mask.to_surface(setcolor=(255, 0, 0, 150), unsetcolor=(0, 0, 0, 0))
             surface.blit(wall_surface, self.rect)
 
-        # 2. Paint the sprites' masks BLUE
+        # Paint the sprites' masks BLUE
         for sprite in self.all_sprites:
             if hasattr(sprite, 'mask'):
                 sprite_surface = sprite.mask.to_surface(setcolor=(0, 0, 255, 150), unsetcolor=(0, 0, 0, 0))

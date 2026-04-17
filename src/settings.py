@@ -18,7 +18,7 @@ LEVELS_DIR = IMAGES_DIR / "levels"
 
 JSON_LEVELS_DIR = PROJECT_ROOT / "levels"
 
-# ---- Absolute Paths for core files -----
+# Absolute Paths for core files 
 
 # Sprites 
 COW_SPRITESHEET_ABS_PATH = str(SPRITES_DIR / "cow_spritesheet.png")

@@ -30,10 +30,10 @@ def load_level(json_path):
 
 
 
-# from src.sprites.duck_key import DuckKey # Make sure to import this if needed for type checking!
+# from src.sprites.duck_key import DuckKey
 
 def main():
-    # --- Initialization ---
+    # Initialization 
     pygame.init()
     pygame.mixer.init() 
 
@@ -46,13 +46,13 @@ def main():
     fps = 60
     font = pygame.font.SysFont(None, 28)
 
-    # --- Load the Level ---
+    # Load the level
     level_paths = [LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH, LEVEL_3_JSON_PATH]
     current_level_index = 0
     current_level, my_cow, my_duck, duck_key, crates, fences, buttons = load_level(level_paths[current_level_index])
     duck_has_key = False
 
-    # --- Find Specific Sprites ---
+    # Find specific sprites
     # We need to extract the specific actors from the level's sprite group
     # to use them in our interaction logic and HUD.
     my_cow = None
@@ -74,19 +74,18 @@ def main():
             buttons.append(sprite)
         elif isinstance(sprite, Fence):
             fences.append(sprite)
-        # Note: Replace 'type(sprite).__name__' with isinstance(sprite, DuckKey) if imported
         elif type(sprite).__name__ == "DuckKey":
             duck_key = sprite
 
     # State tracking
     duck_has_key = False
 
-    # --- Main Game Loop ---
+    # Main game loop 
     running = True
     while running:
         dt = clock.tick(fps) / 1000.0
 
-        # --- Event Handling ---
+        # Event handling
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -99,17 +98,10 @@ def main():
                     current_level, my_cow, my_duck, duck_key, crates, fences, buttons = load_level(level_paths[current_level_index])
                     duck_has_key = False
 
-                # Press E to use the key after collecting it
-                if event.key == pygame.K_e and duck_has_key:
-                    if duck_key:
-                        duck_key.kill()
-                    duck_has_key = False
-
-        # --- Update Logic ---
-        # 1. Update all sprites in the level
+        # Update all sprites in the level
         current_level.update(dt)
 
-        # --- Level Switch: cow walks off the right edge ---
+        # Level switch, cow walks off the right edge
         if my_cow and my_cow.rect.left > 1280:
             current_level_index += 1
             if current_level_index < len(level_paths):
@@ -125,13 +117,13 @@ def main():
             except TypeError:
                 pass  # Failsafe in case duck_key doesn't actually take my_duck as an argument
 
-        # 2. Crate Logic
+        #  Crate Logic
         if my_cow:
             for crate in crates:
-                # --- Crate collision ---
+                # Crate collision 
                 if my_cow.rect.colliderect(crate.rect) and my_cow.is_moving:
                     
-                    # Check if the crate is locked --> If it is you can't push it
+                    # Check if the crate is locked, if it is you can't push it
                     if crate.locked:
                         # Snap the cow to the edge of the locked crate so the cow doesn't clip
                         if my_cow.direction == "left":
@@ -153,7 +145,7 @@ def main():
                     old_crate_x = crate.rect.x
                     old_crate_y = crate.rect.y
                     
-                    # 1. SNAP the crate to the cow to completely remove the clip/overlap
+                    # SNAP the crate to the cow to completely remove the clip/overlap
                     if my_cow.direction == "left":
                         crate.rect.right = my_cow.rect.left
                     elif my_cow.direction == "right":
@@ -163,13 +155,13 @@ def main():
                     elif my_cow.direction == "down":
                         crate.rect.top = my_cow.rect.bottom
                         
-                    # 2. Check if the newly snapped crate hits ANOTHER crate
+                    # Check if the newly snapped crate hits ANOTHER crate
                     hit_crate = any(crate != other_crate and crate.rect.colliderect(other_crate.rect) for other_crate in crates)
                     
-                    # 3. Check if the crate hits a WALL or FENCE
+                    # Check if the crate hits a WALL or FENCE
                     hit_wall = current_level.check_wall_collision(crate) or current_level.check_fence_collision(crate)
 
-                    # 4. If the crate is blocked, BOTH objects must stop
+                    # If the crate is blocked, BOTH objects must stop
                     if hit_crate or hit_wall:
                         # Revert the crate to where it was
                         crate.rect.x = old_crate_x
@@ -191,13 +183,12 @@ def main():
                         
                         break # We hit an obstacle, stop checking this crate
                 
-                # --- Unlock Crate ---
                 # Key touches locked crate: unlock it and consume the key
                 if duck_key.alive() and crate.locked and duck_key.rect.colliderect(crate.rect):
                     crate.unlock()
                     duck_key.kill()
 
-        # 3. Handle Button and Fence Logic
+        # Handle Button and Fence Logic
         for button in current_level.buttons:
             
             # Check if the cow or any crate in the list of crates is touching this specific button
@@ -237,20 +228,20 @@ def main():
                             linked_fence.animation_direction = 1
                 
 
-        # 4. Duck collects key
+        # Duck collects key
         if duck_key and duck_key.alive() and not duck_key.collected and my_duck:
             if my_duck.rect.colliderect(duck_key.rect):
                 duck_key.collected = True
                 duck_has_key = True
 
-        # --- Draw Logic ---
-        # 1. Clear screen (fallback just in case)
+      
+        #  Clear screen (fallback just in case)
         screen.fill((30, 30, 30))
 
-        # 2. Let the level draw its background and all sprites
+        #  Let the level draw its background and all sprites
         current_level.draw(screen)
 
-        # --- HUD: debug info for each sprite ---
+        # debug info for each sprite 
         debug_lines = [
             "Controls: Arrow Keys = Cow | WASD = Duck | R = Restart | ESC = Quit",
             f"FPS: {clock.get_fps():.1f}",
