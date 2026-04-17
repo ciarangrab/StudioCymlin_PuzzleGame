@@ -240,7 +240,7 @@ def main():
     while running:
         dt = clock.tick(fps) / 1000.0
 
-        # --- Event Handling ---
+        # Event handling
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -252,7 +252,7 @@ def main():
                     duck_key.kill()
                     duck_has_key = False
 
-        # --- Update ---
+        # Update
         my_cow.update(dt, collision_handler)
         my_duck.update(dt)
         if duck_key.alive():
@@ -309,7 +309,7 @@ def main():
         # Update fence animation
         fence.update(dt)
 
-        # --- Draw ---
+        #  Draw 
         if background_image:
             screen.blit(background_image, (0, 0))
         else:
@@ -317,11 +317,11 @@ def main():
 
         all_sprites.draw(screen)
 
-        # --- Debug: Draw hitbox rects in white ---
+        #  Draw hitbox rects in white 
         pygame.draw.rect(screen, (255, 255, 255), my_cow.rect, 2)
         pygame.draw.rect(screen, (255, 255, 255), my_crate.rect, 2)
 
-        # --- HUD: debug info for each sprite ---
+        #  debug info for each sprite 
         debug_lines = [
             "Controls: Arrow Keys = Cow | WASD = Duck | ESC = Quit",
             f"FPS: {clock.get_fps():.1f}",

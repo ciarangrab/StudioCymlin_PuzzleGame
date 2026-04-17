@@ -12,7 +12,7 @@ python src/main.py
 ```
 
 ## How to play:
-This is a two player cooperative game. One player will be able to control the cow, and the other controls the duck
+This is a two player cooperative game. One player will be able to control the cow, and the other controls the duck.
 
 ### Cow movement:
 
