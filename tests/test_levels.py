@@ -98,7 +98,7 @@ def main():
                     duck_has_key = False
 
         # Update logic
-        # 1. Update all sprites in the level
+        # Update all sprites in the level
         current_level.update(dt)
 
         # Level switch
