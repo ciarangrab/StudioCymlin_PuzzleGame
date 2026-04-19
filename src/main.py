@@ -1,6 +1,7 @@
 import pygame
 import sys
 import os
+from PIL import Image
 
 # Ensure the src directory is in the path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -11,13 +12,97 @@ from src.sprites.duck import Duck
 from src.sprites.crate import Crate
 from src.sprites.button import Button
 from src.sprites.fence import Fence
-from src.settings import LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH, LEVEL_3_JSON_PATH
+from src.settings import LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH, LEVEL_3_JSON_PATH, CUTSCENE_1_ABS_PATH
+
+
+def load_apng_frames(filepath, scale=4):
+    """ Loads an animated PNG, extracts the frames, and scales them """
+    try:
+        pil_image = Image.open(filepath)
+    except IOError:
+        print(f"Error: Could not load image at {filepath}")
+        return []
+    
+    frames = []
+
+    # Extract the frames, convert to rbga, and scale
+    for frame_index in range(pil_image.n_frames):
+        pil_image.seek(frame_index)
+        frame_rgba = pil_image.convert("RGBA")
+        raw_str = frame_rgba.tobytes("raw", "RGBA")
+
+        pygame_surface = pygame.image.frombytes(raw_str, frame_rgba.size, "RGBA")
+        
+        if scale != 1:
+            new_width = int(pygame_surface.get_width() * scale)
+            new_height = int(pygame_surface.get_height() * scale)
+            pygame_surface = pygame.transform.scale(pygame_surface, (new_width, new_height))
+            
+        duration = pil_image.info.get('duration', 100) 
+        frames.append({
+            'surface': pygame_surface,
+            'duration': duration
+        })
+        
+    return frames
+
+
+def play_cutscene(screen, clock, apng_frames, fps, screen_width, screen_height):
+    """ Plays an animaged PNG cutscene loop until it finishes or the player skips it """
+
+    if not apng_frames:
+        return # Skip if frames failed to load
+
+    current_frame_index = 0
+    time_since_last_frame = 0
+    cutscene_running = True
+
+    while cutscene_running:
+        dt = clock.tick(fps)
+        
+        # Event handling for the cutscene
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                # Allow player to skip the cutscene
+                if event.key in (pygame.K_ESCAPE, pygame.K_SPACE, pygame.K_RETURN):
+                    cutscene_running = False
+                    
+        if not cutscene_running:
+            break 
+
+        # Cutscene Animation Logic
+        time_since_last_frame += dt
+        current_duration = apng_frames[current_frame_index]['duration']
+
+        if time_since_last_frame >= current_duration:
+            time_since_last_frame = 0 
+            if current_frame_index < len(apng_frames) - 1:
+                current_frame_index += 1
+            else:
+                cutscene_running = False # Animation finished!
+
+        # Draw Cutscene
+        screen.fill((30, 30, 30)) 
+        current_surface = apng_frames[current_frame_index]['surface']
+        x_pos = (screen_width - current_surface.get_width()) // 2
+        y_pos = (screen_height - current_surface.get_height()) // 2
+        screen.blit(current_surface, (x_pos, y_pos)) 
+        
+        pygame.display.flip()
+
 
 def load_level(json_path):
+    """ Instantiates a game level"""
     level = GameLevel(json_path)
     my_cow, my_duck, duck_key = None, None, None
     crates, fences, buttons = [], [], []
 
+    # Find specific sprites
+    # We need to extract the specific actors from the level's sprite group
+    # to use them in our interaction logic and HUD.
     for sprite in level.all_sprites:
         if isinstance(sprite, Cow): my_cow = sprite
         elif isinstance(sprite, Duck): my_duck = sprite
@@ -40,21 +125,21 @@ def main():
     screen_width = 1280
     screen_height = 720
     screen = pygame.display.set_mode((screen_width, screen_height))
-    pygame.display.set_caption("GameLevel Integration Test")
+    pygame.display.set_caption("Pushy Farm")
 
     clock = pygame.time.Clock()
     fps = 60
-    font = pygame.font.SysFont(None, 28)
+    font = pygame.font.SysFont(None, 28)\
+    
+    # Load cutscene frames
+    cutscene_1_frames = load_apng_frames(CUTSCENE_1_ABS_PATH, scale=4)
+    #TODO add in outro cutscene
 
-    # Load the level
-    level_paths = [LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH, LEVEL_3_JSON_PATH]
-    current_level_index = 0
-    current_level, my_cow, my_duck, duck_key, crates, fences, buttons = load_level(level_paths[current_level_index])
-    duck_has_key = False
+    # Play intro cutscene
+    play_cutscene(screen, clock, cutscene_1_frames, fps, screen_width, screen_height)
 
-    # Find specific sprites
-    # We need to extract the specific actors from the level's sprite group
-    # to use them in our interaction logic and HUD.
+
+    # Setup for sprites
     my_cow = None
     my_duck = None
     duck_key = None
@@ -62,20 +147,11 @@ def main():
     fences = []
     buttons = []
 
-    for sprite in current_level.all_sprites:
-        # We use type() or isinstance() to identify the sprites
-        if isinstance(sprite, Cow):
-            my_cow = sprite
-        elif isinstance(sprite, Duck):
-            my_duck = sprite
-        elif isinstance(sprite, Crate):
-            crates.append(sprite)
-        elif isinstance(sprite, Button):
-            buttons.append(sprite)
-        elif isinstance(sprite, Fence):
-            fences.append(sprite)
-        elif type(sprite).__name__ == "DuckKey":
-            duck_key = sprite
+    # Load the level
+    level_paths = [LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH, LEVEL_3_JSON_PATH]
+    current_level_index = 0
+    current_level, my_cow, my_duck, duck_key, crates, fences, buttons = load_level(level_paths[current_level_index])
+    duck_has_key = False
 
     # State tracking
     duck_has_key = False

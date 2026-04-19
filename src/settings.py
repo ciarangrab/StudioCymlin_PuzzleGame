@@ -12,6 +12,7 @@ PROJECT_ROOT = SETTINGS_ROOT.parent.parent
 ASSETS_DIR = PROJECT_ROOT / "assets"
 IMAGES_DIR = ASSETS_DIR / "images"
 COLLISION_MASK_DIR = IMAGES_DIR / 'collision_masks'
+CUTSCENES_DIR = IMAGES_DIR / "cutscenes"
 SPRITES_DIR = IMAGES_DIR / "sprites"
 OBJECTS_DIR = SPRITES_DIR / "objects"
 LEVELS_DIR = IMAGES_DIR / "levels"
@@ -36,6 +37,8 @@ FENCE_3_ABS_PATH = str(OBJECTS_DIR / "Bars_3.png")
 FENCE_5_ABS_PATH = str(OBJECTS_DIR / "Bars_5.png")
 FENCE_6_ABS_PATH = str(OBJECTS_DIR / "Bars_6.png")
 
+# Cutscenes
+CUTSCENE_1_ABS_PATH = str(CUTSCENES_DIR / "cutscene_1.png")
 
 # Level 1
 LEVEL_1_JSON_PATH = str(JSON_LEVELS_DIR / "level1.json")
