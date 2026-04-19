@@ -14,6 +14,7 @@ class Duck(GameSprite):
         super().__init__(scale)
 
         self.spriteID = 1
+        self.sound_playing = False
 
         # Set sprite sheet image
         try:
@@ -21,6 +22,13 @@ class Duck(GameSprite):
         except FileNotFoundError:
             print("Error: Could not find 'assets/images/sprites/duck_spritesheet.png'")
             return
+        
+        try:
+            self.sound = pygame.mixer.Sound("assets/images/sfx/flap.mp3")
+            self.sound.set_volume(0.5)
+        except FileNotFoundError:
+            print("Error: Could not find flap sound")
+            self.sound = None
 
         self.standing_img = self.get_image(x=0, y=0, width=16, height=20, scale=scale)
 
@@ -82,6 +90,14 @@ class Duck(GameSprite):
         # Set Boundaries so the duck can't leave the screen
         screen_bounds = pygame.Rect(0, 0, 1280, 720)
         self.rect.clamp_ip(screen_bounds)
+
+        if self.sound:
+            if self.is_moving and not self.sound_playing:
+                self.sound.play(-1)
+                self.sound_playing = True
+            elif not self.is_moving and self.sound_playing:
+                self.sound.stop()
+                self.sound_playing = False
 
         self.x = self.rect.x
         self.y = self.rect.y

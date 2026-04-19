@@ -57,16 +57,16 @@ class Fence(pygame.sprite.Sprite):
 
         self.sound_playing = False
         try:
-            self.move_sound = pygame.mixer.Sound("assets/images/sfx/fence.mp3")
-            self.move_sound.set_volume(2)
+            self.sound = pygame.mixer.Sound("assets/images/sfx/fence.mp3")
+            self.sound.set_volume(0.8)
         except FileNotFoundError:
             print("Error: Could not find fence_move.mp3")
-            self.move_sound = None
+            self.sound = None
     
     def animate(self, dt):
         if self.animating:
-            if self.move_sound and not self.sound_playing:
-                self.move_sound.play(-1)
+            if self.sound and not self.sound_playing:
+                self.sound.play(-1)
                 self.sound_playing = True
 
             # Track time until next frame
@@ -95,8 +95,8 @@ class Fence(pygame.sprite.Sprite):
                 self.image = self.transparent_surface
                 
             if self.frame_index == 0 or self.frame_index == 3:
-                if self.move_sound and self.sound_playing:
-                    self.move_sound.stop()
+                if self.sound and self.sound_playing:
+                    self.sound.stop()
                     self.sound_playing = False
     
             else:

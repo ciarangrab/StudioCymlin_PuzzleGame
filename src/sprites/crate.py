@@ -24,6 +24,13 @@ class Crate(GameSprite):
         except FileNotFoundError:
             print("Error: Could not find 'assets/images/sprites/objects/crate_spritesheet.png'")
             return
+        
+        try:
+            self.sound = pygame.mixer.Sound("assets/images/sfx/unlock.mp3")
+            self.sound.set_volume(1)
+        except FileNotFoundError:
+            print("Error: Could not find unlock sound")
+            self.sound = None
 
         sprite_width = 27
         sprite_height = 27
@@ -57,6 +64,8 @@ class Crate(GameSprite):
     def unlock(self):
         """Unlock the crate and update visual representation."""
         self.locked = False
+        if self.sound:
+            self.sound.play()
         if len(self.walk_right_frames) > 0:
             self.image = self.walk_right_frames[0]
 
