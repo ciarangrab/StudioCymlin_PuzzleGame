@@ -69,7 +69,7 @@ def play_cutscene(screen, clock, apng_frames, fps, screen_width, screen_height, 
             # Handle key presses
             if event.type == pygame.KEYDOWN:
                 if sceneId == 0:
-                    # If sceneId is 0, ANY key press ends the loop
+                    # If sceneId is 0 --> ANY key press ends the loop
                     cutscene_running = False
                 else:
                     # Otherwise, only specific keys skip the cutscene
@@ -96,7 +96,7 @@ def play_cutscene(screen, clock, apng_frames, fps, screen_width, screen_height, 
                 if sceneId == 0:
                     current_frame_index = 0 # Loop back to the first frame
                 else:
-                    cutscene_running = False # Animation finished normally!
+                    cutscene_running = False # Animation finished normally
 
         # Draw Cutscene
         screen.fill((30, 30, 30)) 
