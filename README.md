@@ -7,8 +7,19 @@
 - Pygame
 - Pillow
 
+## Setup and Installation:
+
+Before running the game, you need to install the required libraries:
+
+1. Open your terminal
+2. (Optional but recommended) Create and activate a virtual environment
+3. Install the required packages by running:
+```bash
+pip install -r requirements.txt
+```
+
 ## How to run:
-``` 
+```bash
 python src/main.py
 ```
 
