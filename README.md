@@ -4,7 +4,8 @@
 
 - VS Code
 - Python 3
-- Pygame 
+- Pygame
+- Pillow
 
 ## How to run:
 ``` 
