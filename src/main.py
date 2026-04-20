@@ -12,7 +12,7 @@ from src.sprites.duck import Duck
 from src.sprites.crate import Crate
 from src.sprites.button import Button
 from src.sprites.fence import Fence
-from src.settings import LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH, LEVEL_3_JSON_PATH, CUTSCENE_1_ABS_PATH
+from src.settings import LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH, LEVEL_3_JSON_PATH, TITLE_SCRN_ABS_PATH, CUTSCENE_1_ABS_PATH
 
 
 def load_apng_frames(filepath, scale=4):
@@ -47,11 +47,11 @@ def load_apng_frames(filepath, scale=4):
     return frames
 
 
-def play_cutscene(screen, clock, apng_frames, fps, screen_width, screen_height):
+def play_cutscene(screen, clock, apng_frames, fps, screen_width, screen_height, sceneId=0):
     """ Plays an animaged PNG cutscene loop until it finishes or the player skips it """
 
     if not apng_frames:
-        return # Skip if frames failed to load
+            return # Skip if frames failed to load
 
     current_frame_index = 0
     time_since_last_frame = 0
@@ -65,10 +65,20 @@ def play_cutscene(screen, clock, apng_frames, fps, screen_width, screen_height):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+                
+            # Handle key presses
             if event.type == pygame.KEYDOWN:
-                # Allow player to skip the cutscene
-                if event.key in (pygame.K_ESCAPE, pygame.K_SPACE, pygame.K_RETURN):
+                if sceneId == 0:
+                    # If sceneId is 0, ANY key press ends the loop
                     cutscene_running = False
+                else:
+                    # Otherwise, only specific keys skip the cutscene
+                    if event.key in (pygame.K_ESCAPE, pygame.K_SPACE, pygame.K_RETURN):
+                        cutscene_running = False
+            
+            # Optional: Allow mouse clicks to skip if sceneId == 0
+            if event.type == pygame.MOUSEBUTTONDOWN and sceneId == 0:
+                cutscene_running = False
                     
         if not cutscene_running:
             break 
@@ -82,7 +92,11 @@ def play_cutscene(screen, clock, apng_frames, fps, screen_width, screen_height):
             if current_frame_index < len(apng_frames) - 1:
                 current_frame_index += 1
             else:
-                cutscene_running = False # Animation finished!
+                # Reached the end of the frames
+                if sceneId == 0:
+                    current_frame_index = 0 # Loop back to the first frame
+                else:
+                    cutscene_running = False # Animation finished normally!
 
         # Draw Cutscene
         screen.fill((30, 30, 30)) 
@@ -129,14 +143,18 @@ def main():
 
     clock = pygame.time.Clock()
     fps = 60
-    font = pygame.font.SysFont(None, 28)\
+    font = pygame.font.SysFont(None, 28)
     
     # Load cutscene frames
-    cutscene_1_frames = load_apng_frames(CUTSCENE_1_ABS_PATH, scale=4)
+    title_frames = load_apng_frames(TITLE_SCRN_ABS_PATH, scale=4)           # Title Screen
+    cutscene_1_frames = load_apng_frames(CUTSCENE_1_ABS_PATH, scale=4)      # Opening Sequence
     #TODO add in outro cutscene
 
+    # Play Title Screen
+    play_cutscene(screen, clock, title_frames, fps, screen_width, screen_height, sceneId=0)
+
     # Play intro cutscene
-    play_cutscene(screen, clock, cutscene_1_frames, fps, screen_width, screen_height)
+    play_cutscene(screen, clock, cutscene_1_frames, fps, screen_width, screen_height, sceneId=1)
 
 
     # Setup for sprites

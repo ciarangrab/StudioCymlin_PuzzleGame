@@ -38,6 +38,7 @@ FENCE_5_ABS_PATH = str(OBJECTS_DIR / "Bars_5.png")
 FENCE_6_ABS_PATH = str(OBJECTS_DIR / "Bars_6.png")
 
 # Cutscenes
+TITLE_SCRN_ABS_PATH = str(CUTSCENES_DIR / "title_screen.png")
 CUTSCENE_1_ABS_PATH = str(CUTSCENES_DIR / "cutscene_1.png")
 
 # Level 1
