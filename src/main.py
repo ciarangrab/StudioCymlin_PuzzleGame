@@ -12,7 +12,7 @@ from src.sprites.duck import Duck
 from src.sprites.crate import Crate
 from src.sprites.button import Button
 from src.sprites.fence import Fence
-from src.settings import LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH, LEVEL_3_JSON_PATH, TITLE_SCRN_ABS_PATH, CUTSCENE_1_ABS_PATH
+from src.settings import LEVEL_1_JSON_PATH, LEVEL_2_JSON_PATH, LEVEL_3_JSON_PATH, TITLE_SCRN_ABS_PATH, CUTSCENE_1_ABS_PATH, END_SCRN_ABS_PATH
 
 
 def load_apng_frames(filepath, scale=4):
@@ -148,7 +148,7 @@ def main():
     # Load cutscene frames
     title_frames = load_apng_frames(TITLE_SCRN_ABS_PATH, scale=4)           # Title Screen
     cutscene_1_frames = load_apng_frames(CUTSCENE_1_ABS_PATH, scale=4)      # Opening Sequence
-    #TODO add in outro cutscene
+    end_frames = load_apng_frames(END_SCRN_ABS_PATH, scale=4)               # End Screen
 
     # Play Title Screen
     play_cutscene(screen, clock, title_frames, fps, screen_width, screen_height, sceneId=0)
@@ -349,6 +349,9 @@ def main():
             screen.blit(text_surface, (10, 10 + i * 26))
 
         pygame.display.flip()
+    
+    # Play Ending Cutscene
+    play_cutscene(screen, clock, end_frames, fps, screen_width, screen_height, sceneId=1)
 
     pygame.quit()
     sys.exit()

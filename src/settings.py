@@ -40,6 +40,7 @@ FENCE_6_ABS_PATH = str(OBJECTS_DIR / "Bars_6.png")
 # Cutscenes
 TITLE_SCRN_ABS_PATH = str(CUTSCENES_DIR / "title_screen.png")
 CUTSCENE_1_ABS_PATH = str(CUTSCENES_DIR / "cutscene_1.png")
+END_SCRN_ABS_PATH = str(CUTSCENES_DIR / "end_scene.png")
 
 # Level 1
 LEVEL_1_JSON_PATH = str(JSON_LEVELS_DIR / "level1.json")
