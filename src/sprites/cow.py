@@ -55,59 +55,37 @@ class Cow(GameSprite):
         self.rect.topleft = (x, y)
 
     def update(self, dt=1, level=None):
-        """ Handles Player info for animation """
-
         PIXELS_PER_SECOND = 200
-
-        # Get the keys that are currently being pressed
         keys = pygame.key.get_pressed()
 
-        # Reset movement for movement check
-        self.is_moving = False
-
-        # Movement and Collision
-        # [ Cow movement controlled by arrow keys ]
-        # Only one direction allowed per frame (no diagonal movement, like duck)
+        old_x = self.rect.x
+        old_y = self.rect.y
 
         if keys[pygame.K_LEFT]:
-            self.x = self.rect.x
             self.rect.x -= int(PIXELS_PER_SECOND * dt)
             self.direction = "left"
-            self.is_moving = True
-            
-            # Check for x-axis collisions
             if level and (level.check_wall_collision(self) or level.check_fence_collision(self)):
-                self.rect.x = self.x
+                self.rect.x = old_x
 
         elif keys[pygame.K_RIGHT]:
-            self.x = self.rect.x
             self.rect.x += int(PIXELS_PER_SECOND * dt)
             self.direction = "right"
-            self.is_moving = True
-            
-            # Check for x-axis collisions
             if level and (level.check_wall_collision(self) or level.check_fence_collision(self)):
-                self.rect.x = self.x
+                self.rect.x = old_x
 
         elif keys[pygame.K_UP]:
-            self.y = self.rect.y
             self.rect.y -= int(PIXELS_PER_SECOND * dt)
             self.direction = "up"
-            self.is_moving = True
-            
-            # Check for y-axis collisions
             if level and (level.check_wall_collision(self) or level.check_fence_collision(self)):
-                self.rect.y = self.y
+                self.rect.y = old_y
 
         elif keys[pygame.K_DOWN]:
-            self.y = self.rect.y
             self.rect.y += int(PIXELS_PER_SECOND * dt)
             self.direction = "down"
-            self.is_moving = True
-            
-            # Check for y-axis collisions
             if level and (level.check_wall_collision(self) or level.check_fence_collision(self)):
-                self.rect.y = self.y
+                self.rect.y = old_y
+
+        self.is_moving = (self.rect.x != old_x) or (self.rect.y != old_y)
 
         if self.walk_sound:
             if self.is_moving and not self.walk_sound_playing:

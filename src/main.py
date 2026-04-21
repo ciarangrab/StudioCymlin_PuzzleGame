@@ -127,7 +127,10 @@ def load_level(json_path):
 
     return level, my_cow, my_duck, duck_key, crates, fences, buttons
 
-
+def stop_cow_walk_sound(cow):
+    if cow and hasattr(cow, "walk_sound") and cow.walk_sound:
+        cow.walk_sound.stop()
+        cow.walk_sound_playing = False
 
 # from src.sprites.duck_key import DuckKey
 
@@ -179,29 +182,40 @@ def main():
     while running:
         dt = clock.tick(fps) / 1000.0
 
-        # Event handling
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                stop_cow_walk_sound(my_cow)
                 running = False
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    stop_cow_walk_sound(my_cow)
                     running = False
 
                 if event.key == pygame.K_r:
-                    current_level, my_cow, my_duck, duck_key, crates, fences, buttons = load_level(level_paths[current_level_index])
+                    stop_cow_walk_sound(my_cow)
+                    current_level, my_cow, my_duck, duck_key, crates, fences, buttons = load_level(
+                        level_paths[current_level_index]
+                    )
                     duck_has_key = False
 
-        # Update all sprites in the level
+        #update all sprites in level
         current_level.update(dt)
 
         # Level switch, cow walks off the right edge
         if my_cow and my_cow.rect.left > 1280:
+            stop_cow_walk_sound(my_cow)
             current_level_index += 1
+
             if current_level_index < len(level_paths):
-                current_level, my_cow, my_duck, duck_key, crates, fences, buttons = load_level(level_paths[current_level_index])
+                current_level, my_cow, my_duck, duck_key, crates, fences, buttons = load_level(
+                    level_paths[current_level_index]
+                )
                 duck_has_key = False
             else:
+                # Play Ending Cutscene
+                stop_cow_walk_sound(my_cow)
+                play_cutscene(screen, clock, end_frames, fps, screen_width, screen_height, sceneId=1)
                 print("All levels complete!")
                 running = False
 
@@ -338,7 +352,7 @@ def main():
         # debug info for each sprite 
         debug_lines = [
             "Controls: Arrow Keys = Cow | WASD = Duck | R = Restart | ESC = Quit",
-            f"FPS: {clock.get_fps():.1f}",
+            #f"FPS: {clock.get_fps():.1f}",
         ]
 
         # Render HUD text
@@ -350,9 +364,7 @@ def main():
 
         pygame.display.flip()
     
-    # Play Ending Cutscene
-    play_cutscene(screen, clock, end_frames, fps, screen_width, screen_height, sceneId=1)
-
+    stop_cow_walk_sound(my_cow)
     pygame.quit()
     sys.exit()
 
