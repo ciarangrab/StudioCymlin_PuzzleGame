@@ -26,7 +26,7 @@ class Cow(GameSprite):
 
         try:
             self.walk_sound = pygame.mixer.Sound("assets/images/sfx/cow_walk.mp3")
-            self.walk_sound.set_volume(1)
+            self.walk_sound.set_volume(0.5)
         except FileNotFoundError:
             print("Error: Could not find cow walk sound")
             self.walk_sound = None

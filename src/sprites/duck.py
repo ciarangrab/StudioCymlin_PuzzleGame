@@ -25,7 +25,7 @@ class Duck(GameSprite):
         
         try:
             self.sound = pygame.mixer.Sound("assets/images/sfx/flap.mp3")
-            self.sound.set_volume(0.5)
+            self.sound.set_volume(0.2)
         except FileNotFoundError:
             print("Error: Could not find flap sound")
             self.sound = None
